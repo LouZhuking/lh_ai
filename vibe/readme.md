@@ -46,3 +46,16 @@
 - vercel特别快可以上线的
 - npx create-next-app@latest . 创建一个网站模版
 - npm run dev 启动本地服务
+
+## Vide Coding 
+  - LLM 相信的
+  - Trae / Cursor
+  - 沉浸式
+  - Prompt 提示词
+    - 给他一个角色 role
+    - 一步步做
+    - 不要做什么，需要遵守什么
+    - 强调下怎么输出
+  - Agent 智能体
+    第三方 收集 体验
+    自己开发Agent

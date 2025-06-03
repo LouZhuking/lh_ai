@@ -37,3 +37,5 @@
   - 代码补全 AIGC
   - Prompt Engineering 自然语义编程
   - AI 自动完成某些任务 (注释，测试， 上线...)
+
+- git 版本控制 
