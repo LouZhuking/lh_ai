@@ -7,14 +7,14 @@ function TodoForm(props) {
     // 阻止默认行为
     // 由js 来控制
     e.preventDefault(); // event api 
-    // console.log(text);
+    // console.log(e.target.value);
+
+    // todos? 打报告
     onAdd(text)
-    // todos?  打报告
   }
 
   const handleChange = (e) => {
     setText(e.target.value)
-
   }
   return (
     <form action="http://www.baidu.com" onSubmit={handleSubmit}>

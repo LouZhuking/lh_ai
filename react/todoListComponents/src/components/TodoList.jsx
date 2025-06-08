@@ -71,8 +71,6 @@ function TodoList() {
           <li>{todo.text}</li>
         )) // 循环每一项返回HTML界面
       } */}
-
-
     </div>
   )
 }
