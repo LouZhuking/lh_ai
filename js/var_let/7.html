@@ -19,8 +19,16 @@
         // this -> a  
         setTimeout(() => {
           // 箭头函数 没有this 该省都省
+          // 如果是function() 匿名函数的话 
           this.func1() // Tony
         }, 1000)
+        // setTimeout(function() => {
+        //   // 箭头函数 没有this 该省都省
+        //   // 如果是function() 匿名函数的话 作为普通函数被调用
+        //   所以这里的this 会指向全局(window) 而window上并没有就会产生报错 undefined
+        //   不仅是没有this 而且是直接报错
+        //   this.func1() // Tony
+        // }, 1000)
       }
     }
     a.func2()
