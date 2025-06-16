@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的世界帝国-策略版</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="empire_game.js"></script>
+</head>
+<body>
+  <div class="game-container">
+    <h1>我的世界帝国-策略版</h1>
+    
+    <div class="game-info">
+      <div id="turn-counter">回合: 0</div>
+      <div id="player-resources">
+        <span>粮食: <span id="food-count">0</span></span>
+        <span>兵力: <span id="troops-count">0</span></span>
+      </div>
+    </div>
+    
+    <div class="map-container" id="game-map">
+      <!-- 地图区域将通过JS动态生成 -->
+    </div>
+    
+    <div class="action-panel">
+      <button id="end-turn-btn">结束回合</button>
+      <div class="region-actions" id="region-actions">
+        <!-- 区域操作面板将通过JS动态生成 -->
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const game = new EmpireGame();
+    
+    // 初始化游戏
+    function initGame() {
+      game.initGame();
+      renderMap();
+      updateUI();
+    }
+    
+    // 渲染地图
+    function renderMap() {
+      const mapElement = document.getElementById('game-map');
+      mapElement.innerHTML = '';
+      
+      game.regions.forEach(region => {
+        const regionElement = document.createElement('div');
+        regionElement.className = `region ${region.type}`;
+        regionElement.dataset.id = region.id;
+        
+        // 设置区域颜色
+        const owner = game.players.find(p => p.id === region.owner);
+        if (owner) {
+          regionElement.style.backgroundColor = owner.color;
+        }
+        
+        regionElement.innerHTML = `
+          <div class="region-id">${region.id}</div>
+          <div class="region-troops">${region.troops}</div>
+        `;
+        
+        // 添加点击事件
+        regionElement.addEventListener('click', () => selectRegion(region.id));
+        
+        mapElement.appendChild(regionElement);
+      });
+    }
+    
+    // 选择区域
+    function selectRegion(regionId) {
+      const region = game.regions[regionId];
+      const actionsElement = document.getElementById('region-actions');
+      
+      // 显示区域操作面板
+      actionsElement.innerHTML = `
+        <h3>区域 ${regionId}</h3>
+        <p>类型: ${region.type === 'plain' ? '平原' : '山地'}</p>
+        <p>兵力: ${region.troops}</p>
+      `;
+      
+      // 如果是敌方区域，显示攻击按钮
+      if (region.owner !== 0 && region.owner !== null) {
+        const attackBtn = document.createElement('button');
+        attackBtn.textContent = '进攻'; 
+        attackBtn.addEventListener('click', () => {
+          const troops = parseInt(prompt('输入进攻兵力:', '10'));
+          if (troops > 0) {
+            game.attackRegion(0, regionId, troops);
+            renderMap();
+            updateUI();
+          }
+        });
+        actionsElement.appendChild(attackBtn);
+      }
+    }
+    
+    // 更新UI
+    function updateUI() {
+      document.getElementById('turn-counter').textContent = `回合: ${game.currentTurn}`;
+      document.getElementById('food-count').textContent = game.players[0].resources.food;
+      document.getElementById('troops-count').textContent = game.players[0].resources.troops;
+    }
+    
+    // 结束回合按钮
+    document.getElementById('end-turn-btn').addEventListener('click', () => {
+      game.endTurn();
+      renderMap();
+      updateUI();
+    });
+    
+    // 启动游戏
+    window.onload = initGame;
+  </script>
+</body>
+</html>

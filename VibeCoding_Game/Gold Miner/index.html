@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黄金矿工</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- 开始菜单 -->
+        <div id="start-menu" class="menu">
+            <h1 class="game-title">黄金矿工</h1>
+            <button id="start-button" class="btn start-btn">开始游戏</button>
+            <div class="game-rules">
+                <h3>游戏规则</h3>
+                <p>点击按钮释放抓钩，抓取地下的金矿和钻石</p>
+                <p>不同物品价值不同，重量也不同</p>
+                <p>在规定时间内达到目标分数即可过关</p>
+            </div>
+        </div>
+
+        <!-- 游戏主界面 -->
+        <div id="game-screen" class="hidden">
+            <div class="game-status">
+                <div class="score">得分: <span id="score">0</span></div>
+                <div class="time">时间: <span id="time">60</span></div>
+                <div class="level">关卡: <span id="level">1</span></div>
+            </div>
+            <div class="game-area">
+                <canvas id="game-canvas" width="800" height="600"></canvas>
+            </div>
+            <div class="game-controls">
+                <button id="hook-button" class="btn hook-btn">释放抓钩</button>
+                <button id="pause-button" class="btn control-btn">暂停</button>
+                <button id="sound-button" class="btn control-btn">音效: <span id="sound-status">开</span></button>
+            </div>
+        </div>
+
+        <!-- 结束界面 -->
+        <div id="end-menu" class="menu hidden">
+            <h2 id="end-message"></h2>
+            <div class="game-stats">
+                <p>最终得分: <span id="final-score">0</span></p>
+                <p>获得金币: <span id="gold-collected">0</span></p>
+                <p>游戏用时: <span id="time-used">0</span>秒</p>
+                <p>最高分: <span id="high-score">0</span></p>
+            </div>
+            <div class="end-buttons">
+                <button id="restart-button" class="btn">重新开始</button>
+                <button id="menu-button" class="btn">返回菜单</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

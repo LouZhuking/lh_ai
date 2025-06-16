@@ -1,0 +1,163 @@
+/* 基础样式设置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+body {
+    background-color: #3a2e2f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.game-container {
+    position: relative;
+    width: 800px;
+    max-width: 100%;
+}
+
+/* 菜单通用样式 */
+.menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+/* 标题样式 */
+.game-title {
+    font-size: 4rem;
+    color: #ffd700;
+    text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
+    margin-bottom: 30px;
+    font-family: 'Press Start 2P', cursive;
+    letter-spacing: 5px;
+}
+
+/* 按钮样式 */
+.btn {
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    background-color: #5d4037;
+    color: white;
+    border: 2px solid #ffd700;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 10px;
+}
+
+.btn:hover {
+    background-color: #ffd700;
+    color: #5d4037;
+    transform: scale(1.05);
+}
+
+.start-btn {
+    font-size: 1.5rem;
+    padding: 15px 30px;
+}
+
+/* 游戏规则样式 */
+.game-rules {
+    margin-top: 30px;
+    background-color: rgba(93, 64, 55, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+}
+
+.game-rules h3 {
+    color: #ffd700;
+    margin-bottom: 10px;
+}
+
+.game-rules p {
+    margin: 5px 0;
+    line-height: 1.5;
+}
+
+/* 游戏状态样式 */
+.game-status {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #5d4037;
+    color: white;
+    font-weight: bold;
+    border-bottom: 3px solid #ffd700;
+}
+
+.score, .time, .level {
+    font-size: 1.2rem;
+}
+
+/* 游戏区域样式 */
+.game-area {
+    position: relative;
+    background-color: #8b4513;
+}
+
+canvas {
+    display: block;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==');
+}
+
+/* 游戏控制区样式 */
+.game-controls {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    background-color: #5d4037;
+    border-top: 3px solid #ffd700;
+}
+
+.hook-btn {
+    background-color: #d35400;
+    font-size: 1.3rem;
+    padding: 12px 30px;
+    margin: 0 20px;
+}
+
+/* 结束菜单样式 */
+.game-stats {
+    margin: 20px 0;
+    text-align: center;
+    background-color: rgba(93, 64, 55, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.game-stats p {
+    margin: 10px 0;
+    font-size: 1.2rem;
+}
+
+#end-message {
+    font-size: 2rem;
+    color: #ffd700;
+    margin-bottom: 20px;
+}
+
+.end-buttons {
+    display: flex;
+    margin-top: 20px;
+}
+
+/* 隐藏元素 */
+.hidden {
+    display: none;
+}

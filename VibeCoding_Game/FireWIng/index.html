@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>火柴人荡秋千</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- 开始菜单 -->
+        <div id="start-menu" class="menu">
+            <h1>火柴人荡秋千</h1>
+            <button id="start-button" class="game-button">开始游戏</button>
+            <div class="game-description">
+                <p>点击并按住鼠标发射抓钩</p>
+                <p>松开鼠标释放抓钩</p>
+                <p>摆动并飞跃到目标平台</p>
+            </div>
+        </div>
+
+        <!-- 游戏主界面 -->
+        <div id="game-screen" class="hidden">
+            <div class="level-display">LEVEL <span id="current-level">1</span></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="level-progress"></div>
+            </div>
+            <div class="game-status">
+                <div class="status-item">
+                    <span>关卡:</span>
+                    <span id="level">1</span>
+                </div>
+                <div class="status-item">
+                    <span>时间:</span>
+                    <span id="timer">50</span>
+                </div>
+                <div class="status-item">
+                    <span>分数:</span>
+                    <span id="score">0</span>
+                </div>
+                <button id="pause-button" class="pause-btn"></button>
+            </div>
+            <canvas id="game-canvas" width="800" height="450"></canvas>
+        </div>
+
+        <!-- 结束界面 -->
+        <div id="level-cleared" class="menu hidden">
+            <h2>LEVEL CLEARED</h2>
+            <div class="rewards">
+                <div class="reward-icon"></div>
+                <div class="reward-icon"></div>
+                <div class="reward-icon"></div>
+            </div>
+            <button id="next-level-button" class="game-button">下一关</button>
+        </div>
+        <div id="game-over" class="menu hidden">
+            <h2 id="game-over-title">游戏结束</h2>
+            <div class="score-display">
+                <p>最终得分: <span id="final-score">0</span></p>
+                <p>通过关卡: <span id="levels-completed">0</span></p>
+            </div>
+            <button id="restart-button" class="game-button">重新开始</button>
+            <button id="menu-button" class="game-button">返回菜单</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
