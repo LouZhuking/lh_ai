@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stickman Swing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 菜单界面 -->
+    <div id="menu">
+        <div id="game-container">
+            <!-- 四角按钮 -->
+            <button id="album-btn" class="corner-btn left-top" title="相册"><span class="album-icon"></span></button>
+            <button id="settings-btn" class="corner-btn right-top" title="设置"><span class="settings-icon"></span></button>
+            <button id="avatar-btn" class="corner-btn left-bottom" title="头像"><span class="avatar-icon"></span></button>
+            <button id="pause-btn" class="corner-btn right-bottom" title="暂停"><span class="pause-icon"></span></button>
+            <!-- LOGO -->
+            <div id="logo">
+                <div class="logo-line">STICKMAN</div>
+                <div class="logo-line">SWING</div>
+            </div>
+            <!-- 关卡进度 -->
+            <div id="level-box">LEVEL 1</div>
+            <!-- 火柴人和平台 -->
+            <div id="character-demo"></div>
+            <!-- 开始按钮 -->
+            <button id="start-btn"><span class="play-icon"></span></button>
+        </div>
+    </div>
+    
+    <!-- 游戏画布 -->
+    <canvas id="game-canvas" style="display: none;"></canvas>
+    
+    <script src="game.js"></script>
+</body>
+</html> 
