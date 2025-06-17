@@ -48,7 +48,11 @@ const FINISH_LINE_WIDTH = 30;
 const FINISH_LINE_HEIGHT = 200;
 const FINISH_LINE_GAP = 80;
 
-
+// 顶部只声明一次
+let obstacles = [];
+let nodes = [];
+let finishLine = null;
+let cameraX = 0;
 
 // 添加鼠标事件监听器
 gameCanvas.addEventListener('mousedown', handleMouseDown);
@@ -662,7 +666,8 @@ function clearGame() {
     }, 1200);
 } 
 
-
+/* 
+// 以下是示例代码，已注释掉以避免变量重复声明
 // 1. 定义障碍物和节点数据
 const obstacles = [
   { x: 400, y: 200, width: 20, height: 120, color: 'black' },
@@ -710,3 +715,4 @@ let cameraX = Math.max(0, stickman.x - 100);
 // 4. 绳索发射与摆动
 // 鼠标点击节点时，stickman.anchorPoint = node; stickman.isSwinging = true;
 // 绳索绘制：ctx.moveTo(node.x - cameraX, node.y); ctx.lineTo(stickman.x - cameraX, stickman.y); 
+*/ 

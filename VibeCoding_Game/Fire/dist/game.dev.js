@@ -31,42 +31,24 @@ var stickman = {
   ropeLength: 0
 };
 var platforms = [];
-var targets = []; // 关卡数据
+var targets = []; // 关卡参数
 
-var levelData = {
-  1: {
-    obstacles: [{
-      x: 260,
-      y: 300,
-      w: 18,
-      h: 120
-    }, {
-      x: 60,
-      y: 500,
-      w: 18,
-      h: 80
-    }, {
-      x: 320,
-      y: 80,
-      w: 60,
-      h: 18
-    }, {
-      x: 20,
-      y: 650,
-      w: 60,
-      h: 18
-    }],
-    anchor: {
-      x: 80,
-      y: 120
-    },
-    target: {
-      x: 340,
-      y: 100,
-      r: 22
-    }
-  }
-}; // 添加鼠标事件监听器
+var OBSTACLE_GROUPS = 5;
+var OBSTACLE_PER_GROUP = 3;
+var OBSTACLE_WIDTH = 20;
+var OBSTACLE_HEIGHT = 80;
+var OBSTACLE_GAP_X = 220;
+var OBSTACLE_GAP_Y = 10;
+var NODE_RADIUS = 16;
+var NODE_GAP_X = 220;
+var FINISH_LINE_WIDTH = 30;
+var FINISH_LINE_HEIGHT = 200;
+var FINISH_LINE_GAP = 80; // 顶部只声明一次
+
+var obstacles = [];
+var nodes = [];
+var finishLine = null;
+var cameraX = 0; // 添加鼠标事件监听器
 
 gameCanvas.addEventListener('mousedown', handleMouseDown);
 gameCanvas.addEventListener('mousemove', handleMouseMove);
@@ -104,21 +86,48 @@ function handleMouseDown(e) {
   if (!gameStarted || gamePaused) return;
   isMouseDown = true;
   mouseX = e.clientX;
-  mouseY = e.clientY; // 检查是否可以抓取锚点
+  mouseY = e.clientY; // 找到最近的节点
 
-  if (!stickman.isSwinging) {
-    var dx = mouseX - stickman.x;
-    var dy = mouseY - stickman.y;
-    var distance = Math.sqrt(dx * dx + dy * dy); // 如果鼠标在火柴人附近，开始摆荡
+  var minDist = 99999;
+  var nearest = null;
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
 
-    if (distance < 100) {
-      stickman.isSwinging = true;
-      stickman.anchorPoint = {
-        x: mouseX,
-        y: mouseY
-      };
-      stickman.ropeLength = distance;
+  try {
+    for (var _iterator = nodes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var node = _step.value;
+      var dx = node.x - cameraX - mouseX;
+      var dy = node.y - mouseY;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < minDist && dist < 40) {
+        minDist = dist;
+        nearest = node;
+      }
     }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+        _iterator["return"]();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  if (nearest) {
+    stickman.isSwinging = true;
+    stickman.anchorPoint = {
+      x: nearest.x,
+      y: nearest.y
+    };
+    stickman.ropeLength = Math.sqrt(Math.pow(stickman.x - nearest.x, 2) + Math.pow(stickman.y - nearest.y, 2));
   }
 } // 鼠标移动事件
 
@@ -156,30 +165,14 @@ function handleMouseUp(e) {
 
 
 function initGameObjects() {
-  // 重置火柴人位置
   stickman.x = 100;
   stickman.y = 300;
   stickman.velocityX = 0;
   stickman.velocityY = 0;
   stickman.isSwinging = false;
   stickman.anchorPoint = null;
-  stickman.ropeLength = 0; // 清空并初始化平台
-
-  platforms.length = 0;
-  platforms.push({
-    x: 50,
-    y: 400,
-    width: 100,
-    height: 20
-  }); // 清空并初始化目标点
-
-  targets.length = 0;
-  targets.push({
-    x: 600,
-    y: 200,
-    radius: 20,
-    isReached: false
-  });
+  stickman.ropeLength = 0;
+  generateLevel();
 } // 游戏主循环
 
 
@@ -197,6 +190,7 @@ function gameLoop() {
 
 
 function updateGame() {
+  cameraX = Math.max(0, stickman.x - 120);
   updateStickman();
   checkCollisions();
   checkWinCondition();
@@ -235,13 +229,13 @@ function updateStickman() {
 
 function checkCollisions() {
   // 检查平台碰撞
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
+  var _iteratorNormalCompletion2 = true;
+  var _didIteratorError2 = false;
+  var _iteratorError2 = undefined;
 
   try {
-    for (var _iterator = platforms[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var platform = _step.value;
+    for (var _iterator2 = platforms[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      var platform = _step2.value;
 
       if (stickman.y + stickman.height > platform.y && stickman.y < platform.y + platform.height && stickman.x + stickman.width > platform.x && stickman.x < platform.x + platform.width) {
         stickman.y = platform.y - stickman.height;
@@ -250,39 +244,6 @@ function checkCollisions() {
       }
     } // 检查目标点碰撞
 
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-        _iterator["return"]();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
-
-  var _iteratorNormalCompletion2 = true;
-  var _didIteratorError2 = false;
-  var _iteratorError2 = undefined;
-
-  try {
-    for (var _iterator2 = targets[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-      var target = _step2.value;
-
-      if (!target.isReached) {
-        var dx = stickman.x - target.x;
-        var dy = stickman.y - target.y;
-        var distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < target.radius + stickman.width / 2) {
-          target.isReached = true; // 处理目标达成逻辑
-        }
-      }
-    }
   } catch (err) {
     _didIteratorError2 = true;
     _iteratorError2 = err;
@@ -297,19 +258,49 @@ function checkCollisions() {
       }
     }
   }
+
+  var _iteratorNormalCompletion3 = true;
+  var _didIteratorError3 = false;
+  var _iteratorError3 = undefined;
+
+  try {
+    for (var _iterator3 = targets[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+      var target = _step3.value;
+
+      if (!target.isReached) {
+        var dx = stickman.x - target.x;
+        var dy = stickman.y - target.y;
+        var distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < target.radius + stickman.width / 2) {
+          target.isReached = true; // 处理目标达成逻辑
+        }
+      }
+    }
+  } catch (err) {
+    _didIteratorError3 = true;
+    _iteratorError3 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
+        _iterator3["return"]();
+      }
+    } finally {
+      if (_didIteratorError3) {
+        throw _iteratorError3;
+      }
+    }
+  }
 } // 检查胜利条件
 
 
 function checkWinCondition() {
-  var allTargetsReached = targets.every(function (target) {
-    return target.isReached;
-  });
-
-  if (allTargetsReached) {
-    // 处理胜利逻辑
-    currentLevel++;
-    updateLevelDisplay();
-    resetLevel();
+  if (stickman.x > finishLine.x + finishLine.width / 2) {
+    gamePaused = true;
+    setTimeout(function () {
+      alert('恭喜通关！');
+      window.location.reload();
+    }, 1000);
   }
 } // 重置关卡
 
@@ -330,41 +321,23 @@ function resetLevel() {
 
 function drawPlatforms() {
   ctx.save();
-  var _iteratorNormalCompletion3 = true;
-  var _didIteratorError3 = false;
-  var _iteratorError3 = undefined;
 
-  try {
-    for (var _iterator3 = platforms[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-      var platform = _step3.value;
-      // 绘制平台主体
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(platform.x, platform.y, platform.width, platform.height); // 绘制平台边框
+  for (var _i = 0, _platforms = platforms; _i < _platforms.length; _i++) {
+    var platform = _platforms[_i];
+    // 绘制平台主体
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(platform.x, platform.y, platform.width, platform.height); // 绘制平台边框
 
-      ctx.strokeStyle = '#000';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(platform.x, platform.y, platform.width, platform.height); // 绘制棋盘格
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(platform.x, platform.y, platform.width, platform.height); // 绘制棋盘格
 
-      var gridSize = 10;
+    var gridSize = 10;
 
-      for (var x = platform.x; x < platform.x + platform.width; x += gridSize) {
-        for (var y = platform.y; y < platform.y + platform.height; y += gridSize) {
-          ctx.fillStyle = (x + y) / gridSize % 2 === 0 ? '#fff' : '#000';
-          ctx.fillRect(x, y, gridSize, gridSize);
-        }
-      }
-    }
-  } catch (err) {
-    _didIteratorError3 = true;
-    _iteratorError3 = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion3 && _iterator3["return"] != null) {
-        _iterator3["return"]();
-      }
-    } finally {
-      if (_didIteratorError3) {
-        throw _iteratorError3;
+    for (var x = platform.x; x < platform.x + platform.width; x += gridSize) {
+      for (var y = platform.y; y < platform.y + platform.height; y += gridSize) {
+        ctx.fillStyle = (x + y) / gridSize % 2 === 0 ? '#fff' : '#000';
+        ctx.fillRect(x, y, gridSize, gridSize);
       }
     }
   }
@@ -375,39 +348,21 @@ function drawPlatforms() {
 
 function drawTargets() {
   ctx.save();
-  var _iteratorNormalCompletion4 = true;
-  var _didIteratorError4 = false;
-  var _iteratorError4 = undefined;
 
-  try {
-    for (var _iterator4 = targets[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-      var target = _step4.value;
-      // 绘制目标点
+  for (var _i2 = 0, _targets = targets; _i2 < _targets.length; _i2++) {
+    var target = _targets[_i2];
+    // 绘制目标点
+    ctx.beginPath();
+    ctx.arc(target.x, target.y, target.radius, 0, Math.PI * 2);
+    ctx.fillStyle = target.isReached ? '#4CAF50' : '#2196F3';
+    ctx.fill(); // 绘制光晕效果
+
+    if (!target.isReached) {
       ctx.beginPath();
-      ctx.arc(target.x, target.y, target.radius, 0, Math.PI * 2);
-      ctx.fillStyle = target.isReached ? '#4CAF50' : '#2196F3';
-      ctx.fill(); // 绘制光晕效果
-
-      if (!target.isReached) {
-        ctx.beginPath();
-        ctx.arc(target.x, target.y, target.radius + 5, 0, Math.PI * 2);
-        ctx.strokeStyle = '#FFD700';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      }
-    }
-  } catch (err) {
-    _didIteratorError4 = true;
-    _iteratorError4 = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
-        _iterator4["return"]();
-      }
-    } finally {
-      if (_didIteratorError4) {
-        throw _iteratorError4;
-      }
+      ctx.arc(target.x, target.y, target.radius + 5, 0, Math.PI * 2);
+      ctx.strokeStyle = '#FFD700';
+      ctx.lineWidth = 2;
+      ctx.stroke();
     }
   }
 
@@ -448,20 +403,17 @@ function hideMenu() {
 
 
 function drawGame() {
-  // 绘制背景
-  drawBackground(); // 绘制平台
-
-  drawPlatforms(); // 绘制目标点
-
-  drawTargets(); // 绘制火柴人
-
-  drawStickman(); // 如果正在摆荡，绘制绳索
+  drawBackground();
+  drawObstacles();
+  drawNodes();
+  drawFinishLine();
+  drawStickman(); // 绳索
 
   if (stickman.isSwinging && stickman.anchorPoint) {
     ctx.save();
     ctx.beginPath();
-    ctx.moveTo(stickman.anchorPoint.x, stickman.anchorPoint.y);
-    ctx.lineTo(stickman.x, stickman.y);
+    ctx.moveTo(stickman.anchorPoint.x - cameraX, stickman.anchorPoint.y);
+    ctx.lineTo(stickman.x - cameraX, stickman.y);
     ctx.strokeStyle = '#fff';
     ctx.lineWidth = 2;
     ctx.stroke();
@@ -502,35 +454,160 @@ pauseBtn.onclick = function () {
 
 function drawStickman() {
   ctx.save();
-  ctx.translate(stickman.x, stickman.y); // 身体
+  ctx.translate(stickman.x - cameraX, stickman.y); // 头
 
-  ctx.strokeStyle = '#3A8DFF';
-  ctx.lineWidth = 12;
+  ctx.beginPath();
+  ctx.arc(0, -18, 18, 0, 2 * Math.PI);
+  ctx.fillStyle = '#3A8DFF';
+  ctx.fill();
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 3;
+  ctx.stroke(); // 身体
+
   ctx.beginPath();
   ctx.moveTo(0, 0);
-  ctx.lineTo(0, 44);
-  ctx.stroke(); // 头
-
-  ctx.beginPath();
-  ctx.arc(0, -18, 16, 0, 2 * Math.PI);
-  ctx.fillStyle = '#3A8DFF';
-  ctx.fill(); // 手臂
-
+  ctx.lineTo(0, 32);
+  ctx.strokeStyle = '#000';
   ctx.lineWidth = 8;
-  ctx.beginPath();
-  ctx.moveTo(0, 14);
-  ctx.lineTo(-22, 32);
-  ctx.moveTo(0, 14);
-  ctx.lineTo(22, 32);
-  ctx.stroke(); // 腿（分开）
+  ctx.stroke(); // 手臂
 
-  ctx.lineWidth = 10;
   ctx.beginPath();
-  ctx.moveTo(0, 44);
-  ctx.lineTo(-14, 72);
-  ctx.moveTo(0, 44);
-  ctx.lineTo(14, 72);
+  ctx.moveTo(0, 8);
+  ctx.lineTo(-18, 24);
+  ctx.moveTo(0, 8);
+  ctx.lineTo(18, 24);
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 6;
+  ctx.stroke(); // 腿
+
+  ctx.beginPath();
+  ctx.moveTo(0, 32);
+  ctx.lineTo(-14, 54);
+  ctx.moveTo(0, 32);
+  ctx.lineTo(14, 54);
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 6;
   ctx.stroke();
+  ctx.restore();
+}
+
+function generateLevel() {
+  obstacles = [];
+  nodes = []; // 生成节点和障碍物
+
+  for (var g = 0; g < OBSTACLE_GROUPS; g++) {
+    // 节点
+    nodes.push({
+      x: 200 + g * NODE_GAP_X,
+      y: 140 + (g % 2 === 0 ? 0 : 40)
+    }); // 竖直障碍块
+
+    for (var i = 0; i < OBSTACLE_PER_GROUP; i++) {
+      obstacles.push({
+        x: 320 + g * OBSTACLE_GAP_X,
+        y: 200 + i * (OBSTACLE_HEIGHT + OBSTACLE_GAP_Y),
+        width: OBSTACLE_WIDTH,
+        height: OBSTACLE_HEIGHT,
+        color: i % 2 === 0 ? '#000' : '#fff'
+      });
+    }
+  } // 终点
+
+
+  finishLine = {
+    x: 320 + OBSTACLE_GROUPS * OBSTACLE_GAP_X + FINISH_LINE_GAP,
+    y: 180,
+    width: FINISH_LINE_WIDTH,
+    height: FINISH_LINE_HEIGHT
+  };
+} // 绘制障碍物
+
+
+function drawObstacles() {
+  ctx.save();
+  var _iteratorNormalCompletion4 = true;
+  var _didIteratorError4 = false;
+  var _iteratorError4 = undefined;
+
+  try {
+    for (var _iterator4 = obstacles[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+      var obs = _step4.value;
+      ctx.fillStyle = obs.color;
+      ctx.fillRect(obs.x - cameraX, obs.y, obs.width, obs.height); // 边框
+
+      ctx.strokeStyle = '#000';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(obs.x - cameraX, obs.y, obs.width, obs.height);
+    }
+  } catch (err) {
+    _didIteratorError4 = true;
+    _iteratorError4 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion4 && _iterator4["return"] != null) {
+        _iterator4["return"]();
+      }
+    } finally {
+      if (_didIteratorError4) {
+        throw _iteratorError4;
+      }
+    }
+  }
+
+  ctx.restore();
+} // 绘制节点
+
+
+function drawNodes() {
+  ctx.save();
+  var _iteratorNormalCompletion5 = true;
+  var _didIteratorError5 = false;
+  var _iteratorError5 = undefined;
+
+  try {
+    for (var _iterator5 = nodes[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+      var node = _step5.value;
+      ctx.beginPath();
+      ctx.arc(node.x - cameraX, node.y, NODE_RADIUS, 0, 2 * Math.PI);
+      ctx.fillStyle = '#3A8DFF';
+      ctx.shadowColor = '#FFD700';
+      ctx.shadowBlur = 10;
+      ctx.fill();
+      ctx.shadowBlur = 0; // 黄色光圈
+
+      ctx.beginPath();
+      ctx.arc(node.x - cameraX, node.y, NODE_RADIUS + 6, 0, 2 * Math.PI);
+      ctx.strokeStyle = 'rgba(255,220,0,0.5)';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+  } catch (err) {
+    _didIteratorError5 = true;
+    _iteratorError5 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
+        _iterator5["return"]();
+      }
+    } finally {
+      if (_didIteratorError5) {
+        throw _iteratorError5;
+      }
+    }
+  }
+
+  ctx.restore();
+} // 绘制终点
+
+
+function drawFinishLine() {
+  ctx.save();
+
+  for (var i = 0; i < finishLine.height / 20; i++) {
+    ctx.fillStyle = i % 2 === 0 ? '#fff' : '#000';
+    ctx.fillRect(finishLine.x - cameraX, finishLine.y + i * 20, finishLine.width, 20);
+  }
+
   ctx.restore();
 }
 
@@ -568,13 +645,13 @@ function updatePhysics() {
   } // 障碍物碰撞
 
 
-  var _iteratorNormalCompletion5 = true;
-  var _didIteratorError5 = false;
-  var _iteratorError5 = undefined;
+  var _iteratorNormalCompletion6 = true;
+  var _didIteratorError6 = false;
+  var _iteratorError6 = undefined;
 
   try {
-    for (var _iterator5 = levelData[level].obstacles[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-      var obs = _step5.value;
+    for (var _iterator6 = levelData[level].obstacles[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+      var obs = _step6.value;
 
       if (stickman.x + stickman.radius > obs.x && stickman.x - stickman.radius < obs.x + obs.w && stickman.y + stickman.radius > obs.y && stickman.y - stickman.radius < obs.y + obs.h) {
         failGame();
@@ -582,16 +659,16 @@ function updatePhysics() {
     } // 目标物判定
 
   } catch (err) {
-    _didIteratorError5 = true;
-    _iteratorError5 = err;
+    _didIteratorError6 = true;
+    _iteratorError6 = err;
   } finally {
     try {
-      if (!_iteratorNormalCompletion5 && _iterator5["return"] != null) {
-        _iterator5["return"]();
+      if (!_iteratorNormalCompletion6 && _iterator6["return"] != null) {
+        _iterator6["return"]();
       }
     } finally {
-      if (_didIteratorError5) {
-        throw _iteratorError5;
+      if (_didIteratorError6) {
+        throw _iteratorError6;
       }
     }
   }
@@ -713,70 +790,54 @@ function clearGame() {
     alert('恭喜通关！');
     window.location.reload();
   }, 1200);
-} // 1. 定义障碍物和节点数据
-
-
-var obstacles = [{
-  x: 400,
-  y: 200,
-  width: 20,
-  height: 120,
-  color: 'black'
-}, {
-  x: 400,
-  y: 340,
-  width: 20,
-  height: 120,
-  color: 'white'
-} // ... 依次生成5组，每组2-3根竖条，交替黑白
+}
+/* 
+// 以下是示例代码，已注释掉以避免变量重复声明
+// 1. 定义障碍物和节点数据
+const obstacles = [
+  { x: 400, y: 200, width: 20, height: 120, color: 'black' },
+  { x: 400, y: 340, width: 20, height: 120, color: 'white' },
+  // ... 依次生成5组，每组2-3根竖条，交替黑白
 ];
-var nodes = [{
-  x: 200,
-  y: 120
-}, // 第一锚点
-{
-  x: 600,
-  y: 120
-} // 第二锚点
-// ... 共5个节点
+const nodes = [
+  { x: 200, y: 120 }, // 第一锚点
+  { x: 600, y: 120 }, // 第二锚点
+  // ... 共5个节点
 ];
-var finishLine = {
-  x: 1200,
-  y: 100,
-  width: 30,
-  height: 200
-}; // 2. 绘制障碍物、节点、终点
+const finishLine = { x: 1200, y: 100, width: 30, height: 200 };
 
+// 2. 绘制障碍物、节点、终点
 function drawObstacles(ctx, cameraX) {
-  for (var _i = 0, _obstacles = obstacles; _i < _obstacles.length; _i++) {
-    var obs = _obstacles[_i];
+  for (let obs of obstacles) {
     ctx.fillStyle = obs.color;
-    ctx.fillRect(obs.x - cameraX, obs.y, obs.width, obs.height); // 可加圆角和阴影
+    ctx.fillRect(obs.x - cameraX, obs.y, obs.width, obs.height);
+    // 可加圆角和阴影
   }
 }
-
 function drawNodes(ctx, cameraX) {
-  for (var _i2 = 0, _nodes = nodes; _i2 < _nodes.length; _i2++) {
-    var node = _nodes[_i2];
+  for (let node of nodes) {
     ctx.beginPath();
     ctx.arc(node.x - cameraX, node.y, 16, 0, 2 * Math.PI);
     ctx.fillStyle = '#3A8DFF';
     ctx.shadowColor = '#FFD700';
     ctx.shadowBlur = 10;
     ctx.fill();
-    ctx.shadowBlur = 0; // 可加黄色光圈
+    ctx.shadowBlur = 0;
+    // 可加黄色光圈
   }
 }
-
 function drawFinishLine(ctx, cameraX) {
   // 画黑白格子竖条
-  for (var i = 0; i < finishLine.height / 20; i++) {
+  for (let i = 0; i < finishLine.height / 20; i++) {
     ctx.fillStyle = i % 2 === 0 ? '#fff' : '#000';
     ctx.fillRect(finishLine.x - cameraX, finishLine.y + i * 20, finishLine.width, 20);
   }
-} // 3. 相机跟随
+}
 
+// 3. 相机跟随
+let cameraX = Math.max(0, stickman.x - 100);
 
-var cameraX = Math.max(0, stickman.x - 100); // 4. 绳索发射与摆动
+// 4. 绳索发射与摆动
 // 鼠标点击节点时，stickman.anchorPoint = node; stickman.isSwinging = true;
-// 绳索绘制：ctx.moveTo(node.x - cameraX, node.y); ctx.lineTo(stickman.x - cameraX, stickman.y);
+// 绳索绘制：ctx.moveTo(node.x - cameraX, node.y); ctx.lineTo(stickman.x - cameraX, stickman.y); 
+*/

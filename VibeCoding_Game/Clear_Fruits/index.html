@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>水果连连看游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- 顶部控制栏 -->
+        <div class="control-bar">
+            <div class="timer">
+                <span class="timer-icon">⏱</span>
+                <span id="time-left">03:00</span>
+            </div>
+            <div class="score">得分: <span id="score">0</span></div>
+            <div class="right-controls">
+                <div class="volume-control">
+                    <button id="volume-btn" class="control-btn">🔊</button>
+                    <div class="volume-slider-container">
+                        <input type="range" id="volume-slider" min="0" max="100" value="70">
+                    </div>
+                </div>
+                <button id="start-btn" class="start-btn">开始游戏</button>
+            </div>
+        </div>
+
+        <!-- 游戏区域 -->
+        <div class="game-board" id="game-board">
+            <!-- 水果方块将通过JS动态生成 -->
+        </div>
+
+        <!-- 底部功能区 -->
+        <div class="footer-bar">
+            <button id="rules-btn" class="footer-btn">游戏规则</button>
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            <button id="sound-toggle" class="footer-btn">音效开关</button>
+        </div>
+    </div>
+
+    <!-- 游戏规则模态框 -->
+    <div id="rules-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>游戏规则</h2>
+            <p>1. 点击两个相同的水果进行配对</p>
+            <p>2. 配对的水果必须可以通过不超过三条直线连接</p>
+            <p>3. 在规定时间内消除所有水果即为胜利</p>
+            <p>4. 每成功配对一组水果获得10分</p>
+        </div>
+    </div>
+
+    <!-- 游戏结束模态框 -->
+    <div id="game-over-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="game-over-title">游戏结束</h2>
+            <p>你的得分: <span id="final-score">0</span></p>
+            <button id="replay-btn" class="start-btn">再玩一次</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
