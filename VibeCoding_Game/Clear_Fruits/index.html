@@ -1,12 +1,31 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>水果连连看游戏</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+    <div id="start-modal" class="start-modal">
+        <div class="start-modal-content">
+            <h1 class="start-title">连连看</h1>
+            <p class="start-desc">快乐连连看，欢乐每一天</p>
+            <div class="mode-select">
+                <button class="mode-btn easy" data-mode="easy">★ 简单模式</button>
+                <button class="mode-btn normal" data-mode="normal">★ 中等模式</button>
+                <button class="mode-btn hard" data-mode="hard">★ 困难模式</button>
+            </div>
+            <button id="start-game-btn" class="start-game-btn">▶ 开始游戏</button>
+            <div class="start-info">
+                <div>当前在线人数：<span id="online-count">1,234</span> 人</div>
+                <div>累计游戏次数：<span id="total-count">123,456</span> 次</div>
+            </div>
+        </div>
+    </div>
+
     <div class="game-container">
         <!-- 顶部控制栏 -->
         <div class="control-bar">
@@ -64,4 +83,5 @@
 
     <script src="game.js"></script>
 </body>
+
 </html>

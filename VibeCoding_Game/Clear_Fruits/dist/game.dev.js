@@ -70,7 +70,69 @@ var elements = {
   finalScoreDisplay: document.getElementById('final-score'),
   replayBtn: document.getElementById('replay-btn'),
   progressBar: document.getElementById('progress-bar')
-}; // 初始化游戏
+}; // 首页弹窗相关
+
+var startModal = document.getElementById('start-modal');
+var modeBtns = document.querySelectorAll('.mode-btn');
+var startGameBtn = document.getElementById('start-game-btn');
+var gameContainer = document.querySelector('.game-container'); // 模式配置
+
+var modeConfig = {
+  easy: {
+    rows: 8,
+    cols: 8,
+    timeLimit: 180
+  },
+  normal: {
+    rows: 10,
+    cols: 10,
+    timeLimit: 150
+  },
+  hard: {
+    rows: 12,
+    cols: 12,
+    timeLimit: 120
+  }
+};
+var selectedMode = 'easy';
+
+function showStartModal() {
+  startModal.style.display = 'flex';
+  gameContainer.style.display = 'none';
+}
+
+function hideStartModal() {
+  startModal.style.display = 'none';
+  gameContainer.style.display = '';
+} // 模式按钮选中逻辑
+
+
+modeBtns.forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    modeBtns.forEach(function (b) {
+      return b.classList.remove('selected');
+    });
+    btn.classList.add('selected');
+    selectedMode = btn.getAttribute('data-mode');
+  });
+}); // 默认选中简单模式
+
+modeBtns.forEach(function (btn) {
+  if (btn.getAttribute('data-mode') === selectedMode) btn.classList.add('selected');
+}); // 点击"开始游戏"按钮
+
+startGameBtn.addEventListener('click', function () {
+  // 根据模式设置参数
+  var config = modeConfig[selectedMode];
+  gameConfig.rows = config.rows;
+  gameConfig.cols = config.cols;
+  gameConfig.timeLimit = config.timeLimit;
+  hideStartModal();
+  initGame();
+  startGame();
+}); // 页面加载时只显示首页弹窗
+
+showStartModal(); // 初始化游戏
 
 function initGame() {
   // 重置游戏状态

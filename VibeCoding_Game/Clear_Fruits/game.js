@@ -1,4 +1,4 @@
- // 游戏配置
+// 游戏配置
 const gameConfig = {
   rows: 10,              // 默认行数
   cols: 10,              // 默认列数
@@ -60,6 +60,57 @@ const elements = {
   replayBtn: document.getElementById('replay-btn'),
   progressBar: document.getElementById('progress-bar')
 };
+
+// 首页弹窗相关
+const startModal = document.getElementById('start-modal');
+const modeBtns = document.querySelectorAll('.mode-btn');
+const startGameBtn = document.getElementById('start-game-btn');
+const gameContainer = document.querySelector('.game-container');
+
+// 模式配置
+const modeConfig = {
+  easy:   { rows: 8, cols: 8, timeLimit: 180 },
+  normal: { rows: 10, cols: 10, timeLimit: 150 },
+  hard:   { rows: 12, cols: 12, timeLimit: 120 }
+};
+let selectedMode = 'easy';
+
+function showStartModal() {
+  startModal.style.display = 'flex';
+  gameContainer.style.display = 'none';
+}
+function hideStartModal() {
+  startModal.style.display = 'none';
+  gameContainer.style.display = '';
+}
+
+// 模式按钮选中逻辑
+modeBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    modeBtns.forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedMode = btn.getAttribute('data-mode');
+  });
+});
+// 默认选中简单模式
+modeBtns.forEach(btn => {
+  if (btn.getAttribute('data-mode') === selectedMode) btn.classList.add('selected');
+});
+
+// 点击"开始游戏"按钮
+startGameBtn.addEventListener('click', () => {
+  // 根据模式设置参数
+  const config = modeConfig[selectedMode];
+  gameConfig.rows = config.rows;
+  gameConfig.cols = config.cols;
+  gameConfig.timeLimit = config.timeLimit;
+  hideStartModal();
+  initGame();
+  startGame();
+});
+
+// 页面加载时只显示首页弹窗
+showStartModal();
 
 // 初始化游戏
 function initGame() {
