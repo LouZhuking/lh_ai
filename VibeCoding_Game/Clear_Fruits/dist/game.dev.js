@@ -150,47 +150,40 @@ function initGame() {
 
   setGameBoardSize(); // 创建游戏板
 
-  createGameBoard(); // 更新按钮状态
+  createGameBoardWithBorder(); // 更新按钮状态
 
   elements.startBtn.textContent = '开始游戏';
 } // 设置游戏板大小
 
 
 function setGameBoardSize() {
-  // 根据屏幕宽度调整游戏板大小
-  if (window.innerWidth <= 480) {
-    gameConfig.rows = 6;
-    gameConfig.cols = 6;
-  } else if (window.innerWidth <= 768) {
-    gameConfig.rows = 8;
-    gameConfig.cols = 8;
-  } else {
-    gameConfig.rows = 10;
-    gameConfig.cols = 10;
-  } // 更新CSS Grid
-
-
+  // 直接根据当前gameConfig.rows和gameConfig.cols设置，不再根据屏幕宽度覆盖
   elements.gameBoard.style.gridTemplateRows = "repeat(".concat(gameConfig.rows, ", 1fr)");
   elements.gameBoard.style.gridTemplateColumns = "repeat(".concat(gameConfig.cols, ", 1fr)");
-} // 创建游戏板
+} // 辅助：生成带边界的棋盘
 
 
-function createGameBoard() {
+function createGameBoardWithBorder() {
   // 清空游戏板
-  elements.gameBoard.innerHTML = ''; // 创建水果数组（每种水果出现偶数次）
+  elements.gameBoard.innerHTML = ''; // 生成带边界的棋盘，外围多一圈空白格
+
+  var rows = gameConfig.rows + 2;
+  var cols = gameConfig.cols + 2;
+  gameState.board = Array(rows).fill().map(function () {
+    return Array(cols).fill(null);
+  }); // 创建水果数组（每种水果出现偶数次）
 
   var fruits = [];
-  var totalCells = gameConfig.rows * gameConfig.cols; // 确保总数是偶数
-
+  var totalCells = gameConfig.rows * gameConfig.cols;
   var adjustedTotal = totalCells - totalCells % 2;
-  gameState.totalPairs = adjustedTotal / 2; // 创建成对的水果
+  gameState.totalPairs = adjustedTotal / 2;
 
   for (var i = 0; i < adjustedTotal / 2; i++) {
     var _fruitIndex = i % gameConfig.fruitTypes.length;
 
     fruits.push(_fruitIndex);
     fruits.push(_fruitIndex);
-  } // 随机打乱水果数组
+  } // 随机打乱
 
 
   for (var _i = fruits.length - 1; _i > 0; _i--) {
@@ -198,52 +191,55 @@ function createGameBoard() {
     var _ref = [fruits[j], fruits[_i]];
     fruits[_i] = _ref[0];
     fruits[j] = _ref[1];
-  } // 创建游戏板
+  }
 
-
-  gameState.board = Array(gameConfig.rows).fill().map(function () {
-    return Array(gameConfig.cols).fill(null);
-  });
-  var fruitIndex = 0; // 填充游戏板并创建 DOM 元素
+  var fruitIndex = 0;
 
   var _loop = function _loop(row) {
-    var _loop2 = function _loop2(col) {
+    var _loop2 = function _loop2(_col) {
       if (fruitIndex < fruits.length) {
-        // 创建水果元素
         var fruitCell = document.createElement('div');
         fruitCell.className = 'fruit-cell';
         fruitCell.dataset.row = row;
-        fruitCell.dataset.col = col; // 创建水果图片
-
+        fruitCell.dataset.col = _col;
         var fruitImg = document.createElement('img');
         fruitImg.className = 'fruit-img';
         fruitImg.src = gameConfig.fruitImages[fruits[fruitIndex]];
-        fruitImg.alt = gameConfig.fruitTypes[fruits[fruitIndex]]; // 设置游戏板状态
-
-        gameState.board[row][col] = {
+        fruitImg.alt = gameConfig.fruitTypes[fruits[fruitIndex]];
+        gameState.board[row][_col] = {
           type: fruits[fruitIndex],
           matched: false,
           element: fruitCell
-        }; // 添加点击事件
-
+        };
         fruitCell.addEventListener('click', function () {
-          return handleCellClick(row, col);
-        }); // 将图片添加到方块中
-
-        fruitCell.appendChild(fruitImg); // 将方块添加到游戏板
-
+          return handleCellClick(row, _col);
+        });
+        fruitCell.appendChild(fruitImg);
         elements.gameBoard.appendChild(fruitCell);
         fruitIndex++;
       }
     };
 
-    for (var col = 0; col < gameConfig.cols; col++) {
-      _loop2(col);
+    for (var _col = 1; _col <= gameConfig.cols; _col++) {
+      _loop2(_col);
     }
   };
 
-  for (var row = 0; row < gameConfig.rows; row++) {
+  for (var row = 1; row <= gameConfig.rows; row++) {
     _loop(row);
+  } // 边界格子设为已匹配（空格）
+
+
+  for (var _row = 0; _row < rows; _row++) {
+    for (var col = 0; col < cols; col++) {
+      if (_row === 0 || _row === rows - 1 || col === 0 || col === cols - 1) {
+        gameState.board[_row][col] = {
+          matched: true,
+          type: null,
+          element: null
+        };
+      }
+    }
   }
 } // 处理方块点击事件
 
@@ -404,12 +400,7 @@ function twoCornerConnect(row1, col1, row2, col2) {
 
 
 function isEmptyCell(row, col) {
-  // 检查是否超出边界
-  if (row < 0 || row >= gameConfig.rows || col < 0 || col >= gameConfig.cols) {
-    return true;
-  } // 检查是否已匹配
-
-
+  if (!gameState.board[row] || !gameState.board[row][col]) return true;
   return gameState.board[row][col].matched;
 } // 匹配成功的处理
 
@@ -541,7 +532,7 @@ function adjustVolume(volume) {
 window.addEventListener('resize', function () {
   if (!gameState.isPlaying) {
     setGameBoardSize();
-    createGameBoard();
+    createGameBoardWithBorder();
   }
 }); // 事件监听器
 

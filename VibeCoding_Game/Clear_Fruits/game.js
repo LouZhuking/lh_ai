@@ -132,7 +132,7 @@ function initGame() {
   setGameBoardSize();
   
   // 创建游戏板
-  createGameBoard();
+  createGameBoardWithBorder();
   
   // 更新按钮状态
   elements.startBtn.textContent = '开始游戏';
@@ -140,88 +140,68 @@ function initGame() {
 
 // 设置游戏板大小
 function setGameBoardSize() {
-  // 根据屏幕宽度调整游戏板大小
-  if (window.innerWidth <= 480) {
-      gameConfig.rows = 6;
-      gameConfig.cols = 6;
-  } else if (window.innerWidth <= 768) {
-      gameConfig.rows = 8;
-      gameConfig.cols = 8;
-  } else {
-      gameConfig.rows = 10;
-      gameConfig.cols = 10;
-  }
-  
-  // 更新CSS Grid
+  // 直接根据当前gameConfig.rows和gameConfig.cols设置，不再根据屏幕宽度覆盖
   elements.gameBoard.style.gridTemplateRows = `repeat(${gameConfig.rows}, 1fr)`;
   elements.gameBoard.style.gridTemplateColumns = `repeat(${gameConfig.cols}, 1fr)`;
 }
 
-// 创建游戏板
-function createGameBoard() {
+// 辅助：生成带边界的棋盘
+function createGameBoardWithBorder() {
   // 清空游戏板
   elements.gameBoard.innerHTML = '';
-  
+
+  // 生成带边界的棋盘，外围多一圈空白格
+  const rows = gameConfig.rows + 2;
+  const cols = gameConfig.cols + 2;
+  gameState.board = Array(rows).fill().map(() => Array(cols).fill(null));
+
   // 创建水果数组（每种水果出现偶数次）
   const fruits = [];
   const totalCells = gameConfig.rows * gameConfig.cols;
-  
-  // 确保总数是偶数
   const adjustedTotal = totalCells - (totalCells % 2);
   gameState.totalPairs = adjustedTotal / 2;
-  
-  // 创建成对的水果
   for (let i = 0; i < adjustedTotal / 2; i++) {
-      const fruitIndex = i % gameConfig.fruitTypes.length;
-      fruits.push(fruitIndex);
-      fruits.push(fruitIndex);
+    const fruitIndex = i % gameConfig.fruitTypes.length;
+    fruits.push(fruitIndex);
+    fruits.push(fruitIndex);
   }
-  
-  // 随机打乱水果数组
+  // 随机打乱
   for (let i = fruits.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [fruits[i], fruits[j]] = [fruits[j], fruits[i]];
+    const j = Math.floor(Math.random() * (i + 1));
+    [fruits[i], fruits[j]] = [fruits[j], fruits[i]];
   }
-  
-  // 创建游戏板
-  gameState.board = Array(gameConfig.rows).fill().map(() => Array(gameConfig.cols).fill(null));
+
   let fruitIndex = 0;
-  
-  // 填充游戏板并创建 DOM 元素
-  for (let row = 0; row < gameConfig.rows; row++) {
-      for (let col = 0; col < gameConfig.cols; col++) {
-          if (fruitIndex < fruits.length) {
-              // 创建水果元素
-              const fruitCell = document.createElement('div');
-              fruitCell.className = 'fruit-cell';
-              fruitCell.dataset.row = row;
-              fruitCell.dataset.col = col;
-              
-              // 创建水果图片
-              const fruitImg = document.createElement('img');
-              fruitImg.className = 'fruit-img';
-              fruitImg.src = gameConfig.fruitImages[fruits[fruitIndex]];
-              fruitImg.alt = gameConfig.fruitTypes[fruits[fruitIndex]];
-              
-              // 设置游戏板状态
-              gameState.board[row][col] = {
-                  type: fruits[fruitIndex],
-                  matched: false,
-                  element: fruitCell
-              };
-              
-              // 添加点击事件
-              fruitCell.addEventListener('click', () => handleCellClick(row, col));
-              
-              // 将图片添加到方块中
-              fruitCell.appendChild(fruitImg);
-              
-              // 将方块添加到游戏板
-              elements.gameBoard.appendChild(fruitCell);
-              
-              fruitIndex++;
-          }
+  for (let row = 1; row <= gameConfig.rows; row++) {
+    for (let col = 1; col <= gameConfig.cols; col++) {
+      if (fruitIndex < fruits.length) {
+        const fruitCell = document.createElement('div');
+        fruitCell.className = 'fruit-cell';
+        fruitCell.dataset.row = row;
+        fruitCell.dataset.col = col;
+        const fruitImg = document.createElement('img');
+        fruitImg.className = 'fruit-img';
+        fruitImg.src = gameConfig.fruitImages[fruits[fruitIndex]];
+        fruitImg.alt = gameConfig.fruitTypes[fruits[fruitIndex]];
+        gameState.board[row][col] = {
+          type: fruits[fruitIndex],
+          matched: false,
+          element: fruitCell
+        };
+        fruitCell.addEventListener('click', () => handleCellClick(row, col));
+        fruitCell.appendChild(fruitImg);
+        elements.gameBoard.appendChild(fruitCell);
+        fruitIndex++;
       }
+    }
+  }
+  // 边界格子设为已匹配（空格）
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      if (row === 0 || row === rows - 1 || col === 0 || col === cols - 1) {
+        gameState.board[row][col] = { matched: true, type: null, element: null };
+      }
+    }
   }
 }
 
@@ -392,12 +372,7 @@ function twoCornerConnect(row1, col1, row2, col2) {
 
 // 检查单元格是否为空（已匹配或超出边界）
 function isEmptyCell(row, col) {
-  // 检查是否超出边界
-  if (row < 0 || row >= gameConfig.rows || col < 0 || col >= gameConfig.cols) {
-      return true;
-  }
-  
-  // 检查是否已匹配
+  if (!gameState.board[row] || !gameState.board[row][col]) return true;
   return gameState.board[row][col].matched;
 }
 
@@ -545,7 +520,7 @@ function adjustVolume(volume) {
 window.addEventListener('resize', () => {
   if (!gameState.isPlaying) {
       setGameBoardSize();
-      createGameBoard();
+      createGameBoardWithBorder();
   }
 });
 
