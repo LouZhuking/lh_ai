@@ -576,8 +576,7 @@ function setupEventListeners() {
 
   elements.replayBtn.addEventListener('click', function () {
     elements.gameOverModal.style.display = 'none';
-    initGame();
-    startGame();
+    showStartModal(); // 显示开始模态框，让玩家重新选择难度
   }); // 点击模态框外部关闭
 
   window.addEventListener('click', function (e) {
