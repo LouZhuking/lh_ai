@@ -7,16 +7,16 @@ const gameConfig = {
       '🍓', '🍉', '🍇', '🍐', '🍌', '🍋', '🍎', '🍊', '🥝', '🍒'
   ],
   fruitImages: [
-      './images/strawberry.png',   // 草莓
-      './images/watermelon.png',   // 西瓜
-      './images/grape.png',        // 葡萄
-      './images/pear.png',         // 梨
-      './images/banana.png',       // 香蕉
-      './images/lemon.png',        // 柠檬
-      './images/apple.png',        // 苹果
-      './images/orange.png',       // 橙子
-      './images/kiwi.png',         // 猕猴桃
-      './images/cherry.png'        // 樱桃
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f353.png', // 草莓
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f349.png', // 西瓜
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f347.png', // 葡萄
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f350.png', // 梨
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f34c.png', // 香蕉
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f34b.png', // 柠檬
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f34e.png', // 苹果
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f34a.png', // 橙子
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f95d.png', // 猕猴桃
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f352.png'  // 樱桃
   ],
   soundEffects: {
       click: new Audio('click.mp3'),
@@ -258,8 +258,14 @@ function checkMatch() {
   }
 }
 
-// 判断两个方块是否可以通过不超过三条直线连接
+// 判断两个方块是否可以通过不超过三条直线连接，支持跨界消除
 function canConnect(row1, col1, row2, col2) {
+  // 处理跨界连接
+  if (isCrossingRightBoundary(row1, col1, row2, col2) || 
+      isCrossingBottomBoundary(row1, col1, row2, col2)) {
+    return true;
+  }
+
   // 如果是同一个方块，不能连接
   if (row1 === row2 && col1 === col2) return false;
   
@@ -330,6 +336,50 @@ function oneCornerConnect(row1, col1, row2, col2) {
       return true;
   }
   
+  return false;
+}
+
+// 检查是否跨界右边界连接
+function isCrossingRightBoundary(row1, col1, row2, col2) {
+  // 检查两个点是否在同一行
+  if (row1 === row2) {
+    // 确保类型相同
+    if (gameState.board[row1][col1] && 
+        gameState.board[row2][col2] && 
+        gameState.board[row1][col1].type === gameState.board[row2][col2].type) {
+      
+      // 检查一个是最右列，一个是最左列
+      const isCol1Right = col1 === gameConfig.cols;
+      const isCol2Right = col2 === gameConfig.cols;
+      const isCol1Left = col1 === 1;
+      const isCol2Left = col2 === 1;
+      
+      // 一个在最右，一个在最左
+      return (isCol1Right && isCol2Left) || (isCol1Left && isCol2Right);
+    }
+  }
+  return false;
+}
+
+// 检查是否跨界下边界连接
+function isCrossingBottomBoundary(row1, col1, row2, col2) {
+  // 检查两个点是否在同一列
+  if (col1 === col2) {
+    // 确保类型相同
+    if (gameState.board[row1][col1] && 
+        gameState.board[row2][col2] && 
+        gameState.board[row1][col1].type === gameState.board[row2][col2].type) {
+      
+      // 检查一个是最下行，一个是最上行
+      const isRow1Bottom = row1 === gameConfig.rows;
+      const isRow2Bottom = row2 === gameConfig.rows;
+      const isRow1Top = row1 === 1;
+      const isRow2Top = row2 === 1;
+      
+      // 一个在最下，一个在最上
+      return (isRow1Bottom && isRow2Top) || (isRow1Top && isRow2Bottom);
+    }
+  }
   return false;
 }
 
