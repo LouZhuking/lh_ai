@@ -21,6 +21,7 @@ const gameConfig = {
   soundEffects: {
       click: new Audio('click.mp3'),
       match: new Audio('match.mp3'),
+      error: new Audio('error.mp3'),  // 新增错误音效
       gameOver: new Audio('game-over.mp3'),
       gameWin: new Audio('win.mp3'),
       background: new Audio('background.mp3')
@@ -262,7 +263,11 @@ function checkMatch() {
 function canConnect(row1, col1, row2, col2) {
   // 处理跨界连接
   if (isCrossingRightBoundary(row1, col1, row2, col2) || 
-      isCrossingBottomBoundary(row1, col1, row2, col2)) {
+      isCrossingBottomBoundary(row1, col1, row2, col2) ||
+      isCrossingRightWithGap(row1, col1, row2, col2) ||
+      isCrossingBottomWithGap(row1, col1, row2, col2) ||
+      isSameRightBoundary(row1, col1, row2, col2) ||
+      isSameBottomBoundary(row1, col1, row2, col2)) {
     return true;
   }
 
@@ -460,12 +465,38 @@ function matchCells() {
 
 // 重置选择
 function resetSelection() {
+  // 如果有两个选中的水果但无法消除，扣除2秒时间
+  if (gameState.firstSelected && gameState.secondSelected) {
+    // 扣除时间
+    gameState.timeLeft = Math.max(0, gameState.timeLeft - 2);
+    updateTimeDisplay();
+    
+    // 闪烁效果提示玩家
+    const firstCell = gameState.board[gameState.firstSelected.row][gameState.firstSelected.col].element;
+    const secondCell = gameState.board[gameState.secondSelected.row][gameState.secondSelected.col].element;
+    
+    // 添加错误提示类
+    firstCell.classList.add('mismatch');
+    secondCell.classList.add('mismatch');
+    
+    // 播放错误音效（如果有）
+    if (gameConfig.soundEffects.error) {
+      playSound('error');
+    }
+    
+    // 0.5秒后移除错误提示类
+    setTimeout(() => {
+      firstCell.classList.remove('mismatch');
+      secondCell.classList.remove('mismatch');
+    }, 500);
+  }
+  
   if (gameState.firstSelected) {
-      gameState.board[gameState.firstSelected.row][gameState.firstSelected.col].element.classList.remove('selected');
+    gameState.board[gameState.firstSelected.row][gameState.firstSelected.col].element.classList.remove('selected');
   }
   
   if (gameState.secondSelected) {
-      gameState.board[gameState.secondSelected.row][gameState.secondSelected.col].element.classList.remove('selected');
+    gameState.board[gameState.secondSelected.row][gameState.secondSelected.col].element.classList.remove('selected');
   }
   
   // 重置选择
@@ -632,6 +663,152 @@ function setupEventListeners() {
           elements.gameOverModal.style.display = 'none';
       }
   });
+}
+
+// 检查是否跨界右边界连接（间隔一个水果）
+function isCrossingRightWithGap(row1, col1, row2, col2) {
+  // 检查两个点是否在同一行
+  if (row1 === row2) {
+    // 确保类型相同
+    if (gameState.board[row1][col1] && 
+        gameState.board[row2][col2] && 
+        gameState.board[row1][col1].type === gameState.board[row2][col2].type) {
+      
+      // 右边界的情况：一个在右边，一个在左边
+      const isRightSide = (col1 >= gameConfig.cols - 1 || col2 >= gameConfig.cols - 1);
+      const isLeftSide = (col1 <= 2 || col2 <= 2);
+      
+      // 如果一个在右边，一个在左边
+      if (isRightSide && isLeftSide) {
+        // 检查中间的格子是否都已匹配
+        let allPathClear = true;
+        
+        // 检查右侧路径
+        if (col1 >= gameConfig.cols - 1) {
+          // 从col1到右边界
+          for (let c = col1 + 1; c <= gameConfig.cols; c++) {
+            if (!isEmptyCell(row1, c)) {
+              allPathClear = false;
+              break;
+            }
+          }
+          // 从左边界到col2
+          for (let c = 1; c < col2; c++) {
+            if (!isEmptyCell(row2, c)) {
+              allPathClear = false;
+              break;
+            }
+          }
+        } else {
+          // 从col2到右边界
+          for (let c = col2 + 1; c <= gameConfig.cols; c++) {
+            if (!isEmptyCell(row2, c)) {
+              allPathClear = false;
+              break;
+            }
+          }
+          // 从左边界到col1
+          for (let c = 1; c < col1; c++) {
+            if (!isEmptyCell(row1, c)) {
+              allPathClear = false;
+              break;
+            }
+          }
+        }
+        
+        return allPathClear;
+      }
+    }
+  }
+  return false;
+}
+
+// 检查是否跨界下边界连接（间隔一个水果）
+function isCrossingBottomWithGap(row1, col1, row2, col2) {
+  // 检查两个点是否在同一列
+  if (col1 === col2) {
+    // 确保类型相同
+    if (gameState.board[row1][col1] && 
+        gameState.board[row2][col2] && 
+        gameState.board[row1][col1].type === gameState.board[row2][col2].type) {
+      
+      // 下边界的情况：一个在下边，一个在上边
+      const isBottomSide = (row1 >= gameConfig.rows - 1 || row2 >= gameConfig.rows - 1);
+      const isTopSide = (row1 <= 2 || row2 <= 2);
+      
+      // 如果一个在下边，一个在上边
+      if (isBottomSide && isTopSide) {
+        // 检查中间的格子是否都已匹配
+        let allPathClear = true;
+        
+        // 检查下侧路径
+        if (row1 >= gameConfig.rows - 1) {
+          // 从row1到下边界
+          for (let r = row1 + 1; r <= gameConfig.rows; r++) {
+            if (!isEmptyCell(r, col1)) {
+              allPathClear = false;
+              break;
+            }
+          }
+          // 从上边界到row2
+          for (let r = 1; r < row2; r++) {
+            if (!isEmptyCell(r, col2)) {
+              allPathClear = false;
+              break;
+            }
+          }
+        } else {
+          // 从row2到下边界
+          for (let r = row2 + 1; r <= gameConfig.rows; r++) {
+            if (!isEmptyCell(r, col2)) {
+              allPathClear = false;
+              break;
+            }
+          }
+          // 从上边界到row1
+          for (let r = 1; r < row1; r++) {
+            if (!isEmptyCell(r, col1)) {
+              allPathClear = false;
+              break;
+            }
+          }
+        }
+        
+        return allPathClear;
+      }
+    }
+  }
+  return false;
+}
+
+// 检查是否同在右侧边界
+function isSameRightBoundary(row1, col1, row2, col2) {
+  // 检查两个水果是否都在最右列
+  const bothOnRightEdge = col1 === gameConfig.cols && col2 === gameConfig.cols;
+  
+  // 确保类型相同
+  if (bothOnRightEdge && 
+      gameState.board[row1][col1] && 
+      gameState.board[row2][col2] && 
+      gameState.board[row1][col1].type === gameState.board[row2][col2].type) {
+    return true;
+  }
+  return false;
+}
+
+// 检查是否同在下侧边界
+function isSameBottomBoundary(row1, col1, row2, col2) {
+  // 检查两个水果是否都在最下行
+  const bothOnBottomEdge = row1 === gameConfig.rows && row2 === gameConfig.rows;
+  
+  // 确保类型相同
+  if (bothOnBottomEdge && 
+      gameState.board[row1][col1] && 
+      gameState.board[row2][col2] && 
+      gameState.board[row1][col1].type === gameState.board[row2][col2].type) {
+    return true;
+  }
+  return false;
 }
 
 // 初始化

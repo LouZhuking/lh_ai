@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>图片懒加载</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-color: pink;
+      }
+      .image-item {
+        width: 500px;
+        height: 600px;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <img
+      class="image-item"
+      lazyload="true"
+      src="https://static.360buyimg.com/item/main/1.0.12/css/i/loading.gif"
+      data-original="https://img.36krcdn.com/hsossms/20250313/v2_15ad8ef9eca34830b4a2e081bbc7f57a@000000_oswg172644oswg1536oswg722_img_000?x-oss-process=image/resize,m_mfit,w_960,h_400,limit_0/crop,w_960,h_400,g_center"
+    />
+    <img
+      class="image-item"
+      lazyload="true"
+      src="https://static.360buyimg.com/item/main/1.0.12/css/i/loading.gif"
+      data-original="https://img.36krcdn.com/hsossms/20250312/v2_aeaa7a1d51e74c3a8f909c96cd73a687@000000_oswg169950oswg1440oswg600_img_jpeg?x-oss-process=image/format,webp"
+    />
+    <img
+      class="image-item"
+      lazyload="true"
+      src="https://static.360buyimg.com/item/main/1.0.12/css/i/loading.gif"
+      data-original="https://img.36krcdn.com/hsossms/20250312/v2_1c88dc26ff9341cf8738d670896ce3a8@5284654_oswg847922oswg1440oswg600_img_png?x-oss-process=image/resize,m_mfit,w_960,h_400,limit_0/crop,w_960,h_400,g_center/format,webp"
+    />
+    <img
+      class="image-item"
+      lazyload="true"
+      src="https://static.360buyimg.com/item/main/1.0.12/css/i/loading.gif"
+      data-original="https://img.36krcdn.com/hsossms/20250312/v2_e1d92f43af2c4f47b8852ea8786e606f@6100851_oswg635095oswg1053oswg495_img_png?x-oss-process=image/resize,m_mfit,w_960,h_400,limit_0/crop,w_960,h_400,g_center/format,webp"
+    />
+    <img
+      class="image-item"
+      lazyload="true"
+      src="https://static.360buyimg.com/item/main/1.0.12/css/i/loading.gif"
+      data-original="https://img.36krcdn.com/hsossms/20250307/v2_9295b22d4a1b4b55ac4c3379b2da80cc@6100851_oswg781048oswg1053oswg495_img_png?x-oss-process=image/resize,m_mfit,w_600,h_400,limit_0/crop,w_600,h_400,g_center/format,webp"
+    />
+    <img
+      class="image-item"
+      lazyload="true"
+      src="https://static.360buyimg.com/item/main/1.0.12/css/i/loading.gif"
+      data-original="https://img.36krcdn.com/hsossms/20250306/v2_6ea048ac01c3408a9ed6ebe79a8fc8a2@5888275_oswg849213oswg1053oswg495_img_png?x-oss-process=image/resize,m_mfit,w_600,h_400,limit_0/crop,w_600,h_400,g_center/format,webp"
+    />
+    <img
+      class="image-item"
+      lazyload="true"
+      src="https://static.360buyimg.com/item/main/1.0.12/css/i/loading.gif"
+      data-original="https://img.36krcdn.com/hsossms/20250312/v2_e4c73b024bcc409fba427adb2d7fb2fa@000000_oswg1251602oswg1080oswg559_img_000?x-oss-process=image/format,jpg/interlace,1"
+    />
+    <img
+      class="image-item"
+      lazyload="true"
+      src="https://static.360buyimg.com/item/main/1.0.12/css/i/loading.gif"
+      data-original="https://img.36krcdn.com/hsossms/20250312/v2_9f21750bb37243128b6b1790f9072649@000000_oswg1219724oswg1080oswg601_img_000?x-oss-process=image/format,jpg/interlace,1"
+    />
+    <img
+      class="image-item"
+      lazyload="true"
+      src="https://static.360buyimg.com/item/main/1.0.12/css/i/loading.gif"
+      data-original="https://img.36krcdn.com/hsossms/20250312/v2_2acf9b228cd940c1b5fdb5691c0b6e4c@000000_oswg1402679oswg1080oswg527_img_000?x-oss-process=image/format,jpg/interlace,1"
+    />
+    <img
+      class="image-item"
+      lazyload="true"
+      src="https://static.360buyimg.com/item/main/1.0.12/css/i/loading.gif"
+      data-original="https://img.36krcdn.com/hsossms/20250312/v2_af4dd443d261445d8e903c473cac074c@000000_oswg1118331oswg1080oswg497_img_000?x-oss-process=image/format,jpg/interlace,1"
+    />
+    <img
+      class="image-item"
+      lazyload="true"
+      src="https://static.360buyimg.com/item/main/1.0.12/css/i/loading.gif"
+      data-original="https://img.36krcdn.com/hsossms/20250313/v2_e7de1cc8e8014122ba303ea036eea532@1743780481_oswg58583oswg1080oswg257_img_000?x-oss-process=image/format,jpg/interlace,1"
+    />
+    <img
+      class="image-item"
+      lazyload="true"
+      src="https://static.360buyimg.com/item/main/1.0.12/css/i/loading.gif"
+      data-original="https://img.36krcdn.com/hsossms/20250313/v2_0f70e0a75a8d4736a050e846cd6ab3e5@1743780481_oswg183216oswg1080oswg629_img_000?x-oss-process=image/format,jpg/interlace,1"
+    />
+
+    <script>
+      // 问题：请解释 document.documentElement.clientHeight 的作用，它和 window.innerHeight 有什么区别？
+      // 答案：document.documentElement.clientHeight 表示 HTML 文档根元素（<html>）的内部高度，不包含滚动条、边框和外边距。
+      // 而 window.innerHeight 表示浏览器视口的高度，包含滚动条的宽度。在标准模式下，两者通常相等，但在怪异模式下可能不同。
+      const viewHeight = document.documentElement.clientHeight;
+      // console.log(viewHeight); 判断image-item是否到达了加载时刻
+      // 问题：请说明 querySelectorAll 方法的作用，以及 `img[data-original][lazyload]` 选择器的含义。
+      // 答案：querySelectorAll 方法用于返回文档中匹配指定 CSS 选择器的所有元素，返回值是一个 NodeList 对象。
+      // `img[data-original][lazyload]` 选择器表示选择同时包含 data-original 和 lazyload 属性的所有 img 元素。
+      const eles = document.querySelectorAll("img[data-original][lazyload]");
+      // console.log(eles);
+      // 问题：请解释函数表达式 `const lazyload = function ()` 的特点，它和箭头函数有什么区别？
+      // 答案：函数表达式 `const lazyload = function ()` 是一种匿名函数赋值给变量的方式，存在变量提升但函数体不会提升。
+      // 与箭头函数的主要区别在于：箭头函数没有自己的 this、arguments、super 和 new.target 绑定，
+      // 其 this 值继承自外层作用域；而普通函数的 this 值在调用时确定。此外，箭头函数不能作为构造函数使用。
+      const lazyload = function () {
+        // 将数组上的prototype方法借给eles 类数组
+        // 问题：为什么要使用 Array.prototype.forEach.call 来遍历类数组对象，直接使用 forEach 可以吗？
+        // 答案：因为 `querySelectorAll` 返回的是 NodeList 对象，它是类数组对象，没有数组原型上的 forEach 方法。
+        // 所以需要使用 `Array.prototype.forEach.call` 将数组的 forEach 方法借给 NodeList 对象使用。直接使用 forEach 会报错。
+        Array.prototype.forEach.call(eles, function (item, index) {
+          // console.log(item);
+          // 没有值， 退出 data-original item.dataset.original
+          // 问题：请说明 dataset 属性的作用，它和 getAttribute 方法有什么区别？
+          // 答案：dataset 属性用于访问元素的自定义数据属性（以 data- 开头的属性），它返回一个 DOMStringMap 对象，
+          // 可以通过驼峰命名法访问这些属性。getAttribute 方法可以获取元素的任意属性值，需要传入完整的属性名。
+          // dataset 更方便处理自定义数据属性，且代码可读性更高，而 getAttribute 更通用。
+          if (item.dataset.original === "") return;
+          // img 标签对象在视口的位置
+          // 问题：请解释 getBoundingClientRect 方法的返回值，如何利用这些值判断元素是否在视口中？
+          // 答案：getBoundingClientRect 方法返回一个 DOMRect 对象，包含元素相对于视口的位置信息，
+          // 如 left、top、right、bottom、width 和 height。若元素的 bottom 大于等于 0 且 top 小于视口高度，
+          // 则可认为元素进入了视口。
+          const rect = item.getBoundingClientRect(); // 用于获得页面中某个元素的左，上，右和下分别相对浏览器视窗的位置
+          // console.log(rect);
+          // 问题：请解释 `rect.bottom >= 0 && rect.top < viewHeight` 这个条件的含义，它是如何判断元素进入视口的？
+          // 答案：`rect.bottom >= 0` 表示元素底部在视口顶部及以下；`rect.top < viewHeight` 表示元素顶部在视口底部以上。
+          // 当这两个条件同时满足时，说明元素至少有一部分在视口中。
+          if (rect.bottom >= 0 && rect.top < viewHeight) {
+            (function () {
+              // 问题：请说明为什么要创建一个新的 Image 对象，它的作用是什么？
+              // 答案：创建新的 Image 对象是为了在内存中预加载图片。通过设置其 src 属性，可以触发图片的加载过程，
+              // 并利用 onload 事件监听图片是否加载完成，避免直接给页面中的 img 元素设置 src 时出现加载失败或卡顿的情况。
+              var img = new Image(); // 内存的img对象
+              // document.body.appendChild(img)
+              // 问题：为什么要先将新 Image 对象的 src 属性赋值为 data-original 的值？
+              // 答案：将新 Image 对象的 src 属性赋值为 data-original 的值，是为了在内存中预加载图片。
+              // 当图片加载完成后，再将其赋值给页面中的 img 元素，这样可以确保图片加载完成后再显示，避免出现空白或加载失败的情况。
+              img.src = item.dataset.original;
+              // 问题：请解释 onload 事件的作用，以及它在图片懒加载中的意义。
+              // 答案：onload 事件在 Image 对象的图片加载完成后触发。在图片懒加载中，利用这个事件可以确保图片完全加载后，
+              // 再将其赋值给页面中的 img 元素，避免出现图片未加载完成就显示的情况，提升用户体验。
+              img.onload = function () {
+                // 加载完成
+                // cache 缓存
+                // 异步
+                // 问题：请说明为什么要在图片加载完成后再将 src 属性赋值给图片元素？
+                // 答案：在图片加载完成后再赋值给页面中的 img 元素，可以避免用户看到图片加载过程中的空白或加载失败的情况，
+                // 提升页面的视觉效果和用户体验。
+                item.src = item.dataset.original; // 图片大，网速慢
+                // 问题：请解释 removeAttribute 方法的作用，为什么要移除 data-original 和 lazyload 属性？
+                // 答案：removeAttribute 方法用于移除元素的指定属性。移除 data-original 和 lazyload 属性是为了优化性能，
+                // 避免在后续的滚动事件中重复处理已经加载过的图片。
+                item.removeAttribute("data-original"); // 性能，不用再迭代item
+                item.removeAttribute("lazyload");
+              };
+            })();
+          }
+        });
+      };
+      // 问题：请解释 window.addEventListener("scroll", lazyload) 的作用，这种方式有什么性能问题，如何优化？
+      // 答案：window.addEventListener("scroll", lazyload) 的作用是给窗口的滚动事件添加一个监听器，
+      // 当用户滚动页面时触发 lazyload 函数，检查图片是否进入视口并进行加载。这种方式的性能问题在于，
+      // 滚动事件会频繁触发，导致大量不必要的函数调用，影响页面性能。可以使用节流（throttle）或防抖（debounce）函数进行优化，
+      // 减少函数的调用频率。
+      window.addEventListener("scroll", lazyload);
+      // 问题：请说明 DOMContentLoaded 事件和 load 事件的区别，为什么要在这个事件中调用 lazyload 函数？
+      // 答案：DOMContentLoaded 事件在 HTML 文档被完全解析并构建成 DOM 树后触发，不等待样式表、图片等资源加载完成；
+      // 而 load 事件在页面所有资源（包括图片、样式表等）都加载完成后才触发。在 DOMContentLoaded 事件中调用 lazyload 函数，
+      // 可以在页面基本结构加载完成后就检查是否有图片已经进入视口，提前加载这些图片，提升用户体验。
+      document.addEventListener("DOMContentLoaded", lazyload);
+    </script>
+  </body>
+</html>
