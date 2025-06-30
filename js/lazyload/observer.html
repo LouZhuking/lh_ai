@@ -67,29 +67,9 @@
       </li>
     </ul>
     <script>
-      // 减少onscroll 的次数
-      // var a = 1;
-      // window.onscroll = function() {
-      //   a++;
-      //   console.log(a);
-      // }
       function addObserver() {
         console.log("///");
-        // 都应该被观察
         const eles = document.querySelectorAll("img[data-original][lazyload]");
-        // console.log(eles);
-        // eles.forEach((ele) => {
-        //   console.log(ele);
-        // });
-        // 展开运算符为何可以，把类数组展开，一项一项打开组成新的数组
-        // Array.prototype.map.call(eles, (ele) => {
-        //   console.log(ele);
-        // });
-        // [eles[0], eles[1]...]  [] 纯在的数组
-        // [...eles];
-        // Array.from(eles).map((ele) => {
-        //   console.log(ele, "???");
-        // });
 
         const observer = new IntersectionObserver(function (changes) {
           // console.log(changes);
@@ -100,7 +80,12 @@
               element.intersectionRatio <= 1
             ) {
               // 图片进入了视口
-              element.target.src = element.target.dataset.original;
+              // element.target.src = element.target.dataset.original;
+              const img = new Image();
+              img.src = element.target.dataset.original;
+              img.onload = function() {
+                element.target.src = img.src;
+              }
             }
           });
         });
