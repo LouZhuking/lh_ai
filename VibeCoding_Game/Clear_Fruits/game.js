@@ -1,4 +1,4 @@
-// 游戏配置
+ // 游戏配置
 const gameConfig = {
   rows: 10,              // 默认行数
   cols: 10,              // 默认列数
@@ -155,46 +155,46 @@ function createGameBoardWithBorder() {
   const rows = gameConfig.rows + 2;
   const cols = gameConfig.cols + 2;
   gameState.board = Array(rows).fill().map(() => Array(cols).fill(null));
-
+  
   // 创建水果数组（每种水果出现偶数次）
   const fruits = [];
   const totalCells = gameConfig.rows * gameConfig.cols;
   const adjustedTotal = totalCells - (totalCells % 2);
   gameState.totalPairs = adjustedTotal / 2;
   for (let i = 0; i < adjustedTotal / 2; i++) {
-    const fruitIndex = i % gameConfig.fruitTypes.length;
-    fruits.push(fruitIndex);
-    fruits.push(fruitIndex);
+      const fruitIndex = i % gameConfig.fruitTypes.length;
+      fruits.push(fruitIndex);
+      fruits.push(fruitIndex);
   }
   // 随机打乱
   for (let i = fruits.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [fruits[i], fruits[j]] = [fruits[j], fruits[i]];
+      const j = Math.floor(Math.random() * (i + 1));
+      [fruits[i], fruits[j]] = [fruits[j], fruits[i]];
   }
-
+  
   let fruitIndex = 0;
   for (let row = 1; row <= gameConfig.rows; row++) {
     for (let col = 1; col <= gameConfig.cols; col++) {
-      if (fruitIndex < fruits.length) {
-        const fruitCell = document.createElement('div');
-        fruitCell.className = 'fruit-cell';
-        fruitCell.dataset.row = row;
-        fruitCell.dataset.col = col;
-        const fruitImg = document.createElement('img');
-        fruitImg.className = 'fruit-img';
-        fruitImg.src = gameConfig.fruitImages[fruits[fruitIndex]];
-        fruitImg.alt = gameConfig.fruitTypes[fruits[fruitIndex]];
-        gameState.board[row][col] = {
-          type: fruits[fruitIndex],
-          matched: false,
-          element: fruitCell
-        };
-        fruitCell.addEventListener('click', () => handleCellClick(row, col));
-        fruitCell.appendChild(fruitImg);
-        elements.gameBoard.appendChild(fruitCell);
-        fruitIndex++;
+          if (fruitIndex < fruits.length) {
+              const fruitCell = document.createElement('div');
+              fruitCell.className = 'fruit-cell';
+              fruitCell.dataset.row = row;
+              fruitCell.dataset.col = col;
+              const fruitImg = document.createElement('img');
+              fruitImg.className = 'fruit-img';
+              fruitImg.src = gameConfig.fruitImages[fruits[fruitIndex]];
+              fruitImg.alt = gameConfig.fruitTypes[fruits[fruitIndex]];
+              gameState.board[row][col] = {
+                  type: fruits[fruitIndex],
+                  matched: false,
+                  element: fruitCell
+              };
+              fruitCell.addEventListener('click', () => handleCellClick(row, col));
+              fruitCell.appendChild(fruitImg);
+              elements.gameBoard.appendChild(fruitCell);
+              fruitIndex++;
+          }
       }
-    }
   }
   // 边界格子设为已匹配（空格）
   for (let row = 0; row < rows; row++) {
@@ -492,11 +492,11 @@ function resetSelection() {
   }
   
   if (gameState.firstSelected) {
-    gameState.board[gameState.firstSelected.row][gameState.firstSelected.col].element.classList.remove('selected');
+      gameState.board[gameState.firstSelected.row][gameState.firstSelected.col].element.classList.remove('selected');
   }
   
   if (gameState.secondSelected) {
-    gameState.board[gameState.secondSelected.row][gameState.secondSelected.col].element.classList.remove('selected');
+      gameState.board[gameState.secondSelected.row][gameState.secondSelected.col].element.classList.remove('selected');
   }
   
   // 重置选择
@@ -650,9 +650,9 @@ function setupEventListeners() {
   
   // 再玩一次按钮
   elements.replayBtn.addEventListener('click', () => {
-    elements.gameOverModal.style.display = 'none';
+      elements.gameOverModal.style.display = 'none';
     showStartModal(); // 显示开始模态框，让玩家重新选择难度
-});
+  });
   
   // 点击模态框外部关闭
   window.addEventListener('click', (e) => {
