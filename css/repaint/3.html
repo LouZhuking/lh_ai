@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .list {
+        width: 300px;
+        min-height: 300px;
+        border: 5px solid #d6abc1;
+      }
+    </style>
+  </head>
+  <body>
+    <ul class="list"></ul>
+
+    <script>
+      const list = document.querySelector(".list");
+      const items = ["apple", "banana", "cherry", "cheese"];
+
+      // 文档碎片
+      let frg = document.createDocumentFragment();
+      const cloneUl = ul.cloneNode(true);
+      for (let i = 0; i < items.length; i++) {
+        const li = document.createElement("li");
+        li.textContent = items[i];
+        cloneUl.appendChild(li);
+      }
+      list.parentNode.replaceChild(cloneUl, ul);
+    </script>
+  </body>
+</html>
