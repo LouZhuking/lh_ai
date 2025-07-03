@@ -8,7 +8,7 @@
 import http from 'http';
 
 const server = http.createServer((req,res)=>{
-  res.end('hello http server')
+  res.end('hello World')
 })
 
 server.listen(1314);

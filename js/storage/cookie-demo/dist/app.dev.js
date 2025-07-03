@@ -12,7 +12,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 // node 准备跟require commonjs say goodbye
 // es6 module 更先进  mjs
 var server = _http["default"].createServer(function (req, res) {
-  res.end('hello http server');
+  res.end('hello World');
 });
 
 server.listen(1314);
