@@ -3,11 +3,13 @@ import {
   useEffect
 } from 'react'
 import './App.css'
+import Timer from './components/Timer'
 
 function App() {
   const [count, setCount] = useState(0)
   const [num, setNumber] = useState(0)
   const [repos, setRepos] = useState([])
+  const [isTimerOn, setIsTimerOn] = useState(true)
 
   // console.log('组件函数开始执行');
   //   // 正作用？渲染组件
@@ -28,6 +30,7 @@ function App() {
   //     console.log('678')
   //   }, [num, count]);
 
+  // useEffect需要干净的函数
     useEffect(() => {
       // api 数据 动态的 
       console.log('只在组件挂载时运行一次!!!');
@@ -59,6 +62,10 @@ function App() {
         repos.map(repo => <li key={repo.id}>{repo.full_name}</li>)
       }
       </ul>
+      {isTimerOn && <Timer />}
+      <button onClick={()=>{
+        setIsTimerOn(!isTimerOn)
+      }}>toggle timer</button>
     </>
   )
 }
