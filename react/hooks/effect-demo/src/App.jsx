@@ -11,24 +11,6 @@ function App() {
   const [repos, setRepos] = useState([])
   const [isTimerOn, setIsTimerOn] = useState(true)
 
-  // console.log('组件函数开始执行');
-  //   // 正作用？渲染组件
-  //   // 渲染完组件后搞点副作用
-  //   // 生命周期函数 挂载后 mounted 
-  //   useEffect(() => {
-  //     console.log('组件渲染完了');
-  //   })
-  //   // 生命周期的更新
-  //   // 第二个参数是依赖项数组
-  //   useEffect(() => {
-  //     console.log('hahha')
-  //   }, [count]);
-  //   useEffect(() => {
-  //     console.log('123')
-  //   }, [num]);
-  //   useEffect(() => {
-  //     console.log('678')
-  //   }, [num, count]);
 
   // useEffect需要干净的函数
     useEffect(() => {
@@ -45,7 +27,6 @@ function App() {
 
     // 组件的模版编译
     // 挂载到#root节点上
-    // console.log('组件的模版编译');
     return (
     <>
       {count}
