@@ -2,18 +2,13 @@ const TodoItem =(props)=>{
   const{
     id,
     text,
-    isComplete
+    isCompleted,
   } = props.todo
-  const { onToggle,onDelete } = props
-
+  const {onToggle, onDelete} = props
   return(
     <div className="todo-item">
-        <input 
-            type="checkbox" 
-            checked={isComplete}
-            onChange={onToggle}
-            />
-        <span className={isComplete? 'completed':''}>{text}</span>
+        <input type="checkbox" checked={isCompleted} onChange={onToggle}/>
+        <span className={isCompleted ? 'completed' : ''}>{text}</span>
         <button onClick={onDelete}>Delete</button>
     </div>
   )
