@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>宏任务，微任务，任务队列</title>
+</head>
+
+<body>
+  <script>
+    // 一个script 就是宏任务开始
+    // static 静态方法  
+    console.log('script start');
+    // 异步任务，宏任务
+    setTimeout(() => {
+      console.log('setTimeout');
+    }, 0)
+    // then 异步 微任务 任务队列
+    Promise.resolve().then(() => {
+      console.log('promise');
+    })
+
+    console.log('script end');
+  </script>
+</body>
+
+</html>
