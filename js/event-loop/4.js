@@ -15,7 +15,6 @@ setTimeout(()=>{
 },0)
 setTimeout(()=>{
   console.log('下一把再相见');
-  
 },0)
 
 promise1.then(value => console.log(value))
