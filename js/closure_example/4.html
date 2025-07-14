@@ -21,7 +21,7 @@
       let last, // 上一次的执行时间
         deferTimer; // timeout id 
 
-      return function (...arguments) {
+      return function (args) {
         let that = this; // 闭包的应用场景
         let now = +new Date(); // 类型转换
         // let args = arguments;
@@ -29,11 +29,11 @@
           clearTimeout(deferTimer);
           deferTimer = setTimeout(function () {
             last = now;
-            fn.apply(that, args)
+            fn.call(that, args)
           }, delay)
         } else {
           last = now;
-          fn.apply(that, args);
+          fn.call(that, args);
         }
       }
     }

@@ -75,4 +75,4 @@
   - 修改了他的颜色 背景颜色 重绘 性能可以
   - 改变了盒子， 重排 开销就大了 js width 的改变
   - transition left 的修改, position: absolute;离开文档流
--
+

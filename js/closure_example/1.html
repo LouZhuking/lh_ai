@@ -48,7 +48,7 @@
     })
     // 高阶函数 耗时函数-> 闭包自由变量
     // 返回一个新函数 频繁执行
-    let debounceAjax = debounce(ajax, 200)
+    let debounceAjax = debounce(ajax, 300)
     inputB.addEventListener('keyup', function (event) {
       debounceAjax(event.target.value)
     })

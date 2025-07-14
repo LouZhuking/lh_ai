@@ -4,13 +4,13 @@ import Page from './components/Page'
 import { ThemeContext } from './ThemeContext'
 
 function App() {
-  const [theme,setTheme] = useState("light");
+  const [theme, setTheme] = useState("light");
   // console.log(ThemeContext);
-  
+
   return (
     <ThemeContext.Provider value={theme}>
       <Page />
-      <button onClick={()=>setTheme("dark")}>Change Theme</button>
+      <button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>Change Theme</button>
     </ThemeContext.Provider>
   )
 }
