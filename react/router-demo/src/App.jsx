@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom'
 import { useState } from 'react'
 import './App.css'
+import Navigation from './components/Navigation'
 import Home from './pages/Home'
 import About from './pages/About'
 import UserProfile from './pages/UserProfile'
@@ -18,13 +19,14 @@ function App() {
     <>
       {/* 前端路由接管一切，配置 */}
       <Router>
+        <Navigation />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/about' element={<About />} />
           <Route path='/user/:id' element={<UserProfile />} />
           <Route path='/products' element={<Products />} >
             {/* 二级路由 */}
-            <Route path=':productId' element={<ProductDetails />} />
+            <Route path='productId' element={<ProductDetails />} />
             <Route path='new' element={<NewProduct />} />
           </Route>
         </Routes>

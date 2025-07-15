@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>闭包-单例</title>
+</head>
+<body>
+   <script>
+    // 回到函数，闭包
+    // 自由变量 唯一的实例
+    function StorageBase(){
+
+    }
+    StorageBase.prototype.getItem = function(key){
+      return localStorage.getItem(key);
+    }
+    StorageBase.prototype.setItem = function(key,value){
+      return localStorage.setItem(key,value);
+    }
+
+    // const storage1 = new StorageBase();
+    // const storage2 = new StorageBase();
+    // console.log(storage1===storage2,'~~~')
+    // 闭包
+    const Storage = (function(){
+      let instance = null;
+      return function(){
+        if(!instance){
+          instance = new StorageBase();
+        }
+        return instance;
+      }
+    })();
+    // 这里的new代表了什么意思？
+    const storage1 = new Storage();
+    // new 不会产生新的对象，上述自执行函数是闭包
+    const storage2 = new Storage();
+    console.log(storage1===storage2,'~~~')
+    storage1.setItem('name','Mr Liu')
+    console.log(storage1.getItem('name'),'~~~')
+    console.log(storage2.getItem('name'),'~~~')
+    // 打印出来的效果都一样
+   </script>
+</body>
+</html>
