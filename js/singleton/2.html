@@ -33,9 +33,9 @@
       }
     })();
     // 这里的new代表了什么意思？
-    const storage1 = new Storage();
+    const storage1 = Storage();
     // new 不会产生新的对象，上述自执行函数是闭包
-    const storage2 = new Storage();
+    const storage2 = Storage();
     console.log(storage1===storage2,'~~~')
     storage1.setItem('name','Mr Liu')
     console.log(storage1.getItem('name'),'~~~')
