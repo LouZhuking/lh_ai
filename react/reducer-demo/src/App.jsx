@@ -46,14 +46,6 @@ const reducer = (state, action) => {
       return {
         count: state.count - 1
       }
-    case 'multiply':
-      return {
-        count: state.count * 2
-      }
-    case 'divide':
-      return {
-        count: state.count / 2
-      }
     case 'incrementByNum':
       return {
         count: state.count + parseInt(action.payload)
@@ -79,10 +71,8 @@ function App() {
   return (
     <>
       <h1>count:{state.count}</h1>
-      <button disabled={state.count >= 10} onClick={() => dispatch({ type: 'increment' })}>+</button>
-      <button disabled={state.count <= 0} onClick={() => dispatch({ type: 'decrement' })}>-</button>
-      <button onClick={() => dispatch({ type: 'multiply' })}>*2</button>
-      <button onClick={() => dispatch({ type: 'divide' })}>/2</button>
+      <button onClick={() => dispatch({ type: 'increment' })}>+</button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
       <input type="text" value={count} onChange={(e) => setCount(e.target.value)} />
       <button
         onClick={() => dispatch({ type: 'incrementByNum', payload: count })}>

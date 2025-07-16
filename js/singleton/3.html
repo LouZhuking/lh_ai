@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modal 登录弹窗单例</title>
+</head>
+<style>
+  #modal{
+    width: 200px;
+    height: 200px;
+    line-height: 200px;
+    position: fixed;
+    left: 50%;  
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background-color: pink;
+    border: 1px solid #000;
+    text-align: center;
+  }
+</style>
+<body>
+
+  <button id="open">Open Modal</button>
+  <button id="close">Close Modal</button>
+  <button id="openSecond">Open Second Modal</button>
+  <script>
+    // 1. 使用 DOM 编程推迟到第一次登录的时候 使用单例模式
+    const Modal = (function(){
+      let modal = null;
+
+      return function(){
+        if(!modal){    // 第一次和唯一一次
+          modal = document.createElement('div');
+          modal.innerHTML = '我是一个全局唯一的Modal';
+          modal.id = 'modal';
+          modal.style.display = 'none';
+          document.body.appendChild(modal);
+        }
+        return modal;
+      }
+    })()
+    document.getElementById('open').addEventListener('click',function(){
+      const modal = new Modal();
+      modal.style.display = 'block';
+    })
+    document.getElementById('openSecond').addEventListener('click',function(){
+      const modal = new Modal();
+      modal.style.display = 'block';
+    })
+    document.getElementById('close').addEventListener('click',function(){
+      // 每次独立弹窗：如果每次都new 一个 Modal, 说明每次弹窗都是独立的，互不影响
+      const modal = new Modal();
+      modal.style.display = 'none';
+    })
+    // new Modal() 
+  </script>
+</body>
+</html>

@@ -140,3 +140,13 @@ setItem(key, value) 和getItem(key)
 - 封装
     getItem
     setItem
+
+
+
+## 单例模式 下
+
+- 实现一个登录弹窗
+    - 用户体验当中不用跳转路由，盖在页面上
+    需要使用到 z-index display none|block 
+    - 性能 90% 用户 不登录 Modal html css js 比较多
+    推迟到第一次用的时候，使用单例模式  使用产品的复用
