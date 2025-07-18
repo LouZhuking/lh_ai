@@ -11,11 +11,11 @@ import {
 } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import ProtectRoute from './pages/ProtectRoute'
-import Pay from './pages/Pay'
 // 函数 路由 -> Route 
 // 懒加载
 const Home = lazy(() => import('./pages/Home'))
 const About = lazy(() => import('./pages/About'))
+const Pay = lazy(() => import('./pages/Pay'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 const Login = lazy(() => import('./pages/Login'))
 // import Home from './pages/Home'

@@ -1,25 +1,20 @@
 import {
   useState
-} from "react";
+} from 'react'
 import {
   useNavigate, // Navigate 组件 js 跳转
   useLocation
-} from 'react-router-dom';
+} from 'react-router-dom'
+
 const Login = () => {
-
   const location = useLocation();
-  // console.log(location.state.from);
-  const navigate = useNavigate(); // navigate 能力
-
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    // console.log(username, password);
-    if (username === 'admin' && password === '123456') {
+    if (username === 'Happy' && password === '1314520') {
       localStorage.setItem('isLogin', 'true');
-      // 登录成功 跳转首页
       navigate(location?.state?.from || '/');
     } else {
       alert('用户名或密码错误');
