@@ -133,6 +133,11 @@ Readme.md 很重要 方便面试官
 - chatbot 模块
   - llm 模块 chat 封装
   - 迭代 chat , 支持任意模型
+- Search
+  - 防抖
+  - api
+    GoogleSuggest
+  - localStorage
 
 ## 项目亮点和难点
 
@@ -142,6 +147,8 @@ Readme.md 很重要 方便面试官
   - 对各家模型比较感兴趣， 升级为 kimiChat，doubaoChat...
     - 性能、能力、性价比
     - 随意切换大模型，通过参数抽象
+  - 文生图
+    - 优化 prompt 设计，
 
 - 原子 css
 
@@ -178,3 +185,11 @@ Readme.md 很重要 方便面试官
   - 流式输出
   - 上下文 LRU
   - coze 工作流接口调用
+
+## 通用组件开发
+
+- Loading
+  - 居中方案
+    position: fixed + tlrb0 + margin auto
+  - React.memo 无状态组件，不重新渲染
+  - animation

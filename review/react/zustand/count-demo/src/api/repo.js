@@ -5,4 +5,4 @@ export const getRepos = async (owner, repo) =>
 
 
 export const getRepoList = async (owner) => 
-  await axios.get(`/users/${owner}/repos`) 
+  await axios.get(`/users/${owner}/repos`)
