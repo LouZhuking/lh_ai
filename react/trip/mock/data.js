@@ -55,7 +55,7 @@ export default [
     response: (req, res) => {
       const randomData = Mock.mock({
         title: '@ctitle(5,10)',
-        price: '@integar(60,100)',
+        price: '@integer(60,100)',
         desc: '@cparagraph(10,30)',
         images: [
           {

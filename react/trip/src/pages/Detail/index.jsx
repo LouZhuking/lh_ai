@@ -62,6 +62,8 @@ const Detail = () => {
   useEffect(() => {
     useTitle(detail.title);
   }, [detail])
+  console.log(detail);
+
   if (loading) return <Skeleton />
   return (
     <>
@@ -75,7 +77,7 @@ const Detail = () => {
           {
             detail.images.map((item, index) => (
               <Swiper.Item key={index}>
-                <Image lazyload src={item.url} />
+                <Image src={item.url} />
               </Swiper.Item>
             ))
           }
