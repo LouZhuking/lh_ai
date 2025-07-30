@@ -1,4 +1,14 @@
 import Mock from "mockjs";
+// 每页10
+const getImages = (page, pageSize = 10) => {
+  // es6 使用的亮点  随机高度的随机图片的来源
+    return Array.from({length:pageSize}, (_, i) => ({
+      // 索引唯一
+      id: `${page}-${i}`,
+      height: Mock.Random.integer(400, 600),
+      url: Mock.Random.image('300x400', Mock.Random.color(), '#fff','img'),
+    }))
+}
 
 export default [
   {
@@ -77,5 +87,17 @@ export default [
         data: randomData
       }
     }
+  },
+  {
+  // ?page=1 queryString
+  url: '/api/images',
+  method: 'get',
+  response: ({query}) => {
+    const page = Number(query.page) || 1;
+    return {
+      code: 0,
+      data: getImages(page)
+    }
+  }
   }
 ];

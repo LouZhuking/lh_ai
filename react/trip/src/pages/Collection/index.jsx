@@ -1,8 +1,23 @@
+import {
+  useImageStore
+} from '@/store/useImageStore'
+import {
+  useEffect
+} from 'react'
+import Waterfall from '@/components/Waterfall'
+
 const Collection = () => {
+  const { loading, images, fetchMore } = useImageStore();
+  // console.log(images);
+
+  useEffect(() => {
+    fetchMore()
+  }, [])
+
   return (
-    <div>
-      <h1>Collection</h1>
-    </div>
+    <>
+      <Waterfall images={images} fetchMore={fetchMore} loading={loading} />
+    </>
   )
 }
 export default Collection

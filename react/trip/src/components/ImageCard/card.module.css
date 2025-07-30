@@ -1,0 +1,15 @@
+.card{
+  width: 100%;
+  margin: 1%;
+  /* 占位 */
+  background-color: #eee; 
+  overflow: hidden;
+  border-radius: 16px;
+}
+.img{
+  width: 100%;
+  height: 100%;
+  /* 会保持元素的宽高比 剪裁 */
+  object-fit: cover;
+  display: block;
+}
