@@ -20,14 +20,16 @@ const Waterfall = (props) => {
 
   useEffect(() => {
     // ref 出现在视窗了 intersectionObserver
-    // 观察者模式
-    const observer = new IntersectionObserver(([entry]) => {
+    // 观察者模式 垃圾回收机制
+    const observer = new IntersectionObserver(([entry], obs) => {
       console.log(entry);
       if (entry.isIntersecting) {
         fetchMore()
       }
+      // obs.unobserve(entry.target)
     })
     if (loader.current) observer.observe(loader.current)
+    return () => observer.disconnect()
   }, [])
 
   return (
