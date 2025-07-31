@@ -46,11 +46,11 @@ const MainLayout = () => {
 
   return (
     <div className=
-    'flex flex-col h-screen' 
-    style={{paddingBottom:"50px"}}
+      'flex flex-col h-screen'
+      style={{ paddingBottom: "50px" }}
     >
       <div className='flex-1'>
-          <Outlet />
+        <Outlet />
       </div>
       {/* tabbar */}
       <Tabbar value={active} onChange={
@@ -59,12 +59,12 @@ const MainLayout = () => {
           navigate(tabs[key].path) // 路由跳转
         }
       }>
-        {tabs.map((tab, index) => (
+        {tabs.map((key, index) => (
           <Tabbar.Item
             key={index}
-            icon={tab.icon}
+            icon={key.icon}
           >
-            {tab.title}
+            {key.title}
           </Tabbar.Item>
         ))}
       </Tabbar>
