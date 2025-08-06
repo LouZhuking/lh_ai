@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drag N Drop</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background-color: paleturquoise;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        overflow: hidden;
+        margin: 0;
+      }
+      .empty {
+        width: 150px;
+        height: 150px;
+        border: 3px solid palegoldenrod;
+        margin: 10px;
+        background-color: #fff;
+      }
+      .fill {
+        background-image: url("https://img1.baidu.com/it/u=400864332,910444934&fm=253&fmt=auto&app=138&f=JPEG?w=514&h=500");
+        width: 145px;
+        height: 145px;
+        cursor: pointer;
+        background-size: cover;
+      }
+      /* 当奶龙移动到空盒子上时变色 */
+
+      /* 自适应 
+        媒体查询
+        媒体(介)选择 超大环绕屏 PC电脑， IPAD ，手机
+        media
+      */
+      @media (max-width: 800px) {
+        body {
+          flex-direction: column;
+        }
+      }
+      /* PC端就是弹性布局 */
+    </style>
+  </head>
+  <body>
+    <div class="empty">
+      <!-- 可以拖拽 -->
+      <div class="fill" draggable="true"></div>
+    </div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+    <div class="empty"></div>
+
+    <script>
+      // <!-- 1.拿到奶龙元素 -->
+      const fill = document.querySelector(".fill");
+
+      // 2. 拿到空盒子元素
+
+      // 3.
+      const body = document.body;
+      // 冒泡机制 事件委托 监听拖拽开始和拖拽结束
+    </script>
+  </body>
+</html>
