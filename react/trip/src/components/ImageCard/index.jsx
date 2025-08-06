@@ -8,7 +8,7 @@ const ImageCard = (props) => {
   // console.log(props);
   const { img } = props
   const { url, height } = img
-  console.log(img);
+  // console.log(img);
 
   const imgRef = useRef(null)
   // console.log(url, height);

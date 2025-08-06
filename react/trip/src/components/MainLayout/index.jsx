@@ -35,7 +35,7 @@ const MainLayout = () => {
   const location = useLocation()
 
   useEffect(() => {
-    console.log(location.pathname, '////');
+    // console.log(location.pathname, '////');
 
     // es6的使用power
     const index = tabs.findIndex(

@@ -66,12 +66,12 @@ const Account = () => {
   const actions = [
     {
       name: 'AI生成头像',
-      color: '#123123',
+      color: '#ee0a24',
       type: 1
     },
     {
       name: '上传头像',
-      color: '#ee0a24',
+      color: '#007AFF',
       type: 2
     }
   ]

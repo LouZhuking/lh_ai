@@ -210,7 +210,8 @@ Readme.md 很重要 方便面试官
       uploadUrl + token + new FormData
       append(file)
       拿到 file_id
-    -
+    - workflowUrl + workflow_id + token
+      工作流需要的参数
 
 - 用户体验优化
   - 搜索建议， 防抖+useMemo 性能优化

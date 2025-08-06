@@ -30,6 +30,7 @@ export default [
                 expiresIn: 86400
             })
             console.log(token,'-----');
+
             // 生成token 颁发令牌
             return {
                 token,
@@ -42,6 +43,7 @@ export default [
     },
     {
         url: '/api/user',
+        
         method: 'get',
         response: (req, res) =>{
             // 用户端 token headers 

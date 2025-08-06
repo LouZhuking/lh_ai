@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:5173/api'
+axios.defaults.baseURL = 'http://localhost:5174/api'
 
 // 请求响应拦截
 axios.interceptors.request.use((config) => {

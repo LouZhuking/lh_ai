@@ -22,7 +22,7 @@ const Waterfall = (props) => {
     // ref 出现在视窗了 intersectionObserver
     // 观察者模式 垃圾回收机制
     const observer = new IntersectionObserver(([entry], obs) => {
-      console.log(entry);
+      // console.log(entry);
       if (entry.isIntersecting) {
         fetchMore()
       }
@@ -36,7 +36,7 @@ const Waterfall = (props) => {
     <div className={styles.wrapper}>
       <div className={styles.column}>
         {
-          images.filter((_, i) => i % 2 === 0).map(img => (
+          images.filter((_, i) => i % 2 == 0).map(img => (
             <ImageCard key={img.id} img={img} />
           ))
         }
