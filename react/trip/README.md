@@ -214,6 +214,7 @@ Readme.md 很重要 方便面试官
       工作流需要的参数
 
 - 用户体验优化
+
   - 搜索建议， 防抖+useMemo 性能优化
   - 组件粒度划分
     React.memo + useCallback
@@ -222,6 +223,15 @@ Readme.md 很重要 方便面试官
   - SPA
   - 骨架屏 skeleton 不用让用户等待了
   - 文件上传的 preview html5 FileReader 对象
+
+- 语音输入发表文章功能
+  - 字节的 tts
+  - onMouseDown
+  - BOM html5
+    navigator.mediaDevices.getUserMedia({
+    audio:true
+    })
+    用户隐私，要授权 getLocation
 
 ## 项目遇到过什么问题。 怎么解决的
 
@@ -268,7 +278,11 @@ Readme.md 很重要 方便面试官
 ## 通用组件开发
 
 - Loading
+
   - 居中方案
     position: fixed + tlrb0 + margin auto
   - React.memo 无状态组件，不重新渲染
   - animation
+
+- AI 功能
+  智能前端(http 请求) + 工作流 + coze api + ai 全新工作链路 + 自动化 Agent
