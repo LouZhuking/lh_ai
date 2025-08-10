@@ -19,7 +19,6 @@ var reverseWords = function(s) {
           start = i + 1;
           console.log(strArr)
         }
-        
 
   }
 
