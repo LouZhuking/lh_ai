@@ -113,4 +113,5 @@ function setOffset(){
   }
 }
 
+// 监听播放器播放时间的变化
 doms.audio.addEventListener('timeupdate', setOffset)
