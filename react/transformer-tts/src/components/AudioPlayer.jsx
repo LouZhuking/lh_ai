@@ -9,10 +9,41 @@ const AudioPlayer = ({ audioUrl, mimeType }) => {
 
   useEffect(() => {
     if (audioPlayer.current && audioSource.current) {
-      audioSource.current.src = audioUrl;
-      audioPlayer.current.play();
+      // 安全地处理音频播放
+      const playAudio = async () => {
+        try {
+          audioPlayer.current.pause();
+          audioSource.current.src = audioUrl;
+          audioPlayer.current.load();
+
+          // 等待音频加载完成后再尝试播放
+          audioPlayer.current.oncanplaythrough = async () => {
+            try {
+              await audioPlayer.current.play();
+            } catch (playError) {
+              // 忽略中断错误，这是预期的行为
+              if (playError.name !== 'AbortError') {
+                console.warn('播放失败:', playError);
+              }
+            }
+          };
+        } catch (error) {
+          console.warn('音频处理失败:', error);
+        }
+      };
+
+      playAudio();
+
+      // 清理函数
+      return () => {
+        if (audioPlayer.current) {
+          audioPlayer.current.pause();
+          audioPlayer.current.oncanplaythrough = null;
+        }
+      };
     }
   }, [audioUrl])
+
   return (
     <div className="flex relative z-10 my-4 w-full">
       <audio
