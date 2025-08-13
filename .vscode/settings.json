@@ -2,5 +2,5 @@
   "compile-hero.disable-compile-files-on-did-save-code": false,
   "liveServer.settings.port": 5506,
   "editor.maxTokenizationLineLength": 20000,
-  "cSpell.words": ["Trae"]
+  "cSpell.words": ["MVVM", "Trae"]
 }
