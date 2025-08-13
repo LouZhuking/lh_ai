@@ -15,7 +15,7 @@ const AudioPlayer = ({ audioUrl, mimeType }) => {
           audioPlayer.current.pause();
           audioSource.current.src = audioUrl;
           audioPlayer.current.load();
-
+          
           // 等待音频加载完成后再尝试播放
           audioPlayer.current.oncanplaythrough = async () => {
             try {
@@ -43,7 +43,6 @@ const AudioPlayer = ({ audioUrl, mimeType }) => {
       };
     }
   }, [audioUrl])
-
   return (
     <div className="flex relative z-10 my-4 w-full">
       <audio
