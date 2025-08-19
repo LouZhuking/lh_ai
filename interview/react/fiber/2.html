@@ -79,6 +79,14 @@
       }
     })
 
+    function processItem(item) {
+      // 同步代码，耗时间
+      let result = 0;
+      for (let i = 0; i < 5000; i++) {
+        result += Math.sqrt(item.value) * Math.sin(i);
+      }
+    }
+
     function processDataChunk(deadline) {
       // console.log(deadline);
       // 剩余可执行时间
@@ -92,6 +100,21 @@
         // 即中断
         // 之后又可以继续
         processedItems++;
+        const progress = Math.floor((processedItems / dataItems.length) * 100);
+        progressBar.style.width = progress + '%';
+        statusEl.textContent = `已处理
+        ${processedItems}/${dataItems.length}(${progress})`;
+      }
+      console.log('//////', processedItems);
+      if (processedItems < dataItems.length && isProcessing) {
+        requestIdleCallback(processDataChunk)
+      } else if (isProcessing) {
+        const endTime = performance.now();
+        const totalTime = (endTime - startTime).toFixed(2);
+        statusEl.textContent = `完成!处理了${processedItems}个项目,
+        耗时${totalTime}ms;
+        `
+        isProcessing = false;
       }
 
     }
