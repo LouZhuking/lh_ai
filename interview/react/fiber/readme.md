@@ -18,3 +18,14 @@
 - requestAnimationFrame
   是浏览器提供的用于在下一次重绘之前执行动画代码的 API,它能确保动画流畅运行并节省资源
   1s 执行 60 次
+
+- requestIdleCallback
+
+  - React 组件渲染低优先级任务
+    不能往死里干，需要被中断
+  - 更高优先级的任务是用户交互的交互
+
+  - react 组件树 渲染任务拆分
+    在一个时间切片里能执行
+    这个时间长度用 requestIdleCallback 来描述的
+    一直去问还有多少可执行时间
