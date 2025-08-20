@@ -1,4 +1,4 @@
-"use client"; // client 编译
+'use client'; // client 编译
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -44,7 +44,7 @@ var card_1 = require("@/components/ui/card");
 var input_1 = require("@/components/ui/input");
 function Home() {
     var _this = this;
-    var _a = react_1.useState(""), newTodo = _a[0], setNewTodo = _a[1];
+    var _a = react_1.useState(''), newTodo = _a[0], setNewTodo = _a[1];
     var _b = react_1.useState([]), todos = _b[0], setTodos = _b[1];
     var addTodo = function () { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -55,7 +55,7 @@ function Home() {
                     return [4 /*yield*/, fetch('/api/todos', {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Text': 'application/json'
                             },
                             body: JSON.stringify({
                                 text: newTodo
@@ -69,22 +69,22 @@ function Home() {
             }
         });
     }); };
-    var DeleteTodos = function () { return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, fetch("/api/todos", {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })];
-                case 1:
-                    _a.sent();
-                    fetchTodos();
-                    return [2 /*return*/];
-            }
-        });
-    }); };
+    // const addTodo = async () => {
+    //   // 1.判断输入的待办事项内容是否为空（去除首尾空格后），如果为空则直接返回，不执行后续操作
+    //   if (!newTodo.trim()) return;
+    //   // 2.向后端API发送POST请求添加新的待办事项
+    //   await fetch('/api/todos', {
+    //     method: 'POST', // 使用POST方法向服务器发送数据
+    //     headers: {
+    //       'Content-Type': 'application/json', // 设置请求头，告诉服务器发送的数据格式为JSON
+    //     },
+    //     body: JSON.stringify({ // 将JavaScript对象转换为JSON字符串格式
+    //       text: newTodo, // 将用户输入的待办事项文本作为请求体发送
+    //     })
+    //   })
+    //   setNewTodo("") // 清空输入框，将newTodo状态重置为空字符串
+    //   fetchTodos() // 重新获取所有待办事项列表，以便在页面上显示最新的数据
+    // }
     var fetchTodos = function () { return __awaiter(_this, void 0, void 0, function () {
         var response, data;
         return __generator(this, function (_a) {
@@ -100,21 +100,55 @@ function Home() {
             }
         });
     }); };
+    var toggleTodo = function (id, completed) { return __awaiter(_this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch('/api/todos', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ id: id, completed: completed })
+                    })];
+                case 1:
+                    _a.sent();
+                    fetchTodos();
+                    return [2 /*return*/];
+            }
+        });
+    }); };
+    var deleteTodo = function (id) { return __awaiter(_this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch('/api/todos', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ id: id })
+                    })];
+                case 1:
+                    _a.sent();
+                    fetchTodos();
+                    return [2 /*return*/];
+            }
+        });
+    }); };
     react_1.useEffect(function () {
         fetchTodos();
     }, []);
-    return (React.createElement("main", { className: 'container mx-auto p-4 max-w-md' },
+    return (React.createElement("main", { className: "container mx-auto p-4 max-w-md" },
         React.createElement(card_1.Card, null,
             React.createElement(card_1.CardHeader, null,
                 React.createElement(card_1.CardTitle, null, "Todo List")),
             React.createElement(card_1.CardContent, null,
-                React.createElement("div", { className: 'flex gap-2 mb-4' },
+                React.createElement("div", { className: "flex gap-2 mb-4" },
                     React.createElement(input_1.Input, { value: newTodo, onChange: function (e) { return setNewTodo(e.target.value); }, placeholder: "Add new todo...", onKeyPress: function (e) { return e.key === 'Enter' && addTodo(); } }),
                     React.createElement(button_1.Button, { onClick: addTodo }, "Add")),
-                React.createElement("div", { className: 'space-y-2' }, todos.map(function (todo) { return (React.createElement("div", { key: todo.id, className: 'flex items-center justify-between p-2 border rounded' },
-                    React.createElement("div", { className: 'flex items-center gap-2' },
-                        React.createElement("input", { type: "checkbox", checked: todo.completed, className: 'w-4 h-4' }),
+                React.createElement("div", { className: "space-y-2" }, todos.map(function (todo) { return (React.createElement("div", { key: todo.id, className: "flex items-center justify-between p-2 border rounded" },
+                    React.createElement("div", { className: "flex items-center gap-2" },
+                        React.createElement("input", { type: "checkbox", checked: todo.completed, onChange: function (e) { return toggleTodo(todo.id, e.target.checked); }, className: "w-4 h-4" }),
                         React.createElement("span", { className: todo.completed ? 'line-through' : '' }, todo.text)),
-                    React.createElement(button_1.Button, { variant: "destructive", size: "sm", onClick: DeleteTodos }, "Delete"))); }))))));
+                    React.createElement(button_1.Button, { variant: "destructive", size: "sm", onClick: function () { return deleteTodo(todo.id); } }, "Delete"))); }))))));
 }
 exports["default"] = Home;
