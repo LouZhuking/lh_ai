@@ -2,5 +2,12 @@
   "compile-hero.disable-compile-files-on-did-save-code": false,
   "liveServer.settings.port": 5506,
   "editor.maxTokenizationLineLength": 20000,
-  "cSpell.words": ["MVVM", "Trae"]
+  "cSpell.words": ["MVVM", "Trae"],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.semi": true,
+  "prettier.singleQuote": true,
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

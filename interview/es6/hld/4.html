@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>如何让红绿灯停下来</title>
+  </head>
+
+  <body>
+    <button id="start">开始</button>
+    <button id="pause">暂停</button>
+    <div id="status"></div>
+    <script>
+      // 获取状态显示区域的DOM元素，用于显示当前灯的颜色
+      const statusBox = document.getElementById('status');
+      /**
+       * 可取消的延时函数
+       * @param {number} time - 延时时间（毫秒）
+       * @param {AbortSignal} signal - 用于取消操作的信号
+       * @returns {Promise} 返回一个可取消的Promise
+       */
+
+      const sleep = (time, signal) =>
+        new Promise((resolve, reject) => {
+          // 创建定时器，time毫秒后执行
+          const timer = setTimeout(resolve, time);
+          signal.addEventListener(
+            'abort',
+            () => {
+              clearTimeout(timer);
+              reject(new DOMException('Aborted', 'AbortError'));
+            },
+            {
+              // eventemitter 订阅发布者模式
+              once: true,
+            }
+          );
+        });
+      const seq = [
+        {
+          color: 'red',
+          time: 1000,
+        },
+        {
+          color: 'green',
+          time: 2000,
+        },
+        {
+          color: 'yellow',
+          time: 3000,
+        },
+      ];
+
+      let controller = null;
+      async function trafficLight(signal) {
+        while (!signal.aborted) {
+          for (const { color, time } of seq) {
+            if (signal.aborted) return;
+            console.log(color);
+            statusBox.textContent = color;
+            try {
+              await sleep(time, signal);
+            } catch (err) {
+              if (err.name === 'AbortError') return;
+              throw err;
+            }
+          }
+        }
+      }
+
+      document.getElementById('start').addEventListener('click', () => {
+        if (controller && controller.signal.aborted) return;
+        controller = new AbortController();
+        trafficLight(controller.signal);
+      });
+      document.getElementById('pause').addEventListener('click', () => {
+        if (controller) controller.abort();
+      });
+    </script>
+  </body>
+</html>
