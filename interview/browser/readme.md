@@ -15,6 +15,17 @@
     还有各个子进程的创建和管理，通信
 - GPU 进程只有一个， 加速的
     transform:translate3D
+- 渲染进程
+  - 每个tab 都有独立的渲染进程
+  - 安全、快
+  - 多线程架构
+      - GUI渲染线程 dom 树、 cssom树、渲染树、Layout 树，图层合并...
+      bit map 交给主进程去绘制
+      - GUI线程与JS线程引擎互斥 v8引擎 单线程
+          时间过长，就会造成页面渲染阻塞
+      - event loop 事件循环 涉及的线程
+
+
 - 进程间的通信
     Browser进程(CEO) 管理的各个进程
     Browser进程和外界，和硬件间的通信
