@@ -31,6 +31,7 @@ export default function Home() {
 
   }
 
+
   // const addTodo = async () => {
   //   // 1.判断输入的待办事项内容是否为空（去除首尾空格后），如果为空则直接返回，不执行后续操作
   //   if (!newTodo.trim()) return;
@@ -47,6 +48,7 @@ export default function Home() {
   //   setNewTodo("") // 清空输入框，将newTodo状态重置为空字符串
   //   fetchTodos() // 重新获取所有待办事项列表，以便在页面上显示最新的数据
   // }
+
 
 
   const fetchTodos = async () => {
