@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { type Todo } from '@/app/types/todo';
-import { json, text } from 'stream/consumers';
 
 export default function Home() {
   const [newTodo, setNewTodo] = useState('');
@@ -20,7 +19,7 @@ export default function Home() {
     await fetch('/api/todos', {
       method: 'POST',
       headers: {
-        'Content-Text': 'application/json'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         text: newTodo
@@ -29,6 +28,21 @@ export default function Home() {
     setNewTodo("")
     fetchTodos()
 
+  }
+
+  const addTodos = async () => {
+    if (!newTodo.trim()) return;
+    await fetch('/api/todos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        text: newTodo
+      })
+    })
+    setNewTodo("")
+    fetchTodos()
   }
 
 
