@@ -42,6 +42,41 @@
     inputC.addEventListener('keyup', function (e) {
       throttleAjax(e.target.value);
     })
+
+    function throttle(fn, delay) {
+      let curTime = Date.now();
+      return function (...args) {
+        let context = this;
+        let nowTime = Date.now();
+        if (nowTime - curTime >= delay) {
+          curTime = Date.now();
+          return fn.apply(context, args);
+        }
+      }
+    }
+
+    function throttleWithTrailing(fn, delay) {
+      let lastExecTime = 0;
+      let timeoutId = null;
+
+      return function (...args) {
+        const context = this;
+        const now = Date.now();
+
+        const execute = () => {
+          lastExecTime = now;
+          return fn.apply(context, args);
+        };
+
+        if (now - lastExecTime >= delay) {
+          return execute();
+        } else {
+          // 延迟执行最后一次
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(execute, delay - (now - lastExecTime));
+        }
+      };
+    }
   </script>
 </body>
 

@@ -49,6 +49,7 @@ export default function Home() {
     setTodos(
       todos.filter(todo => todo.id !== id)
     )
+    console.log(todos);
   }
 
 

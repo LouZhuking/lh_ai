@@ -118,6 +118,7 @@ function Home() {
                 case 1:
                     _a.sent();
                     setTodos(todos.filter(function (todo) { return todo.id !== id; }));
+                    console.log(todos);
                     return [2 /*return*/];
             }
         });
