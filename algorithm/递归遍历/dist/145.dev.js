@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Definition for a binary tree node.
  * function TreeNode(val, left, right) {
@@ -6,18 +8,21 @@
  *     this.right = (right===undefined ? null : right)
  * }
  */
+
 /**
  * @param {TreeNode} root
  * @return {number[]}
  */
-var postorderTraversal = function(root) {
-    let res = [];
-    const dfs = function(root){
-        if(root === null) return;
-        dfs(root.left);
-        dfs(root.right);
-        res.push(root.val);
-    }
-    dfs(root);
-    return res;
+var postorderTraversal = function postorderTraversal(root) {
+  var res = [];
+
+  var dfs = function dfs(root) {
+    if (root === null) return;
+    dfs(root.left);
+    dfs(root.right);
+    res.push(root.val);
+  };
+
+  dfs(root);
+  return res;
 };
