@@ -10,3 +10,6 @@
   静态文件如何更新?
   使用 hash 表达不同的版本，强制用户读取新文件。
   hash 的设置，可以即强缓存又随时更新。
+
+- js css code split
+- react react-dom react-router libs 单独打包

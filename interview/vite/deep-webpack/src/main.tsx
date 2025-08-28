@@ -6,7 +6,7 @@ import Hello from './Hello.tsx';
 import './main.css'
 
 createRoot(
-  document.getElementById('app')
+  document.getElementById('app') as HTMLElement
 ).render(
   <Hello />
 )

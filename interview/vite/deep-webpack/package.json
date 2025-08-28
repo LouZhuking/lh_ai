@@ -4,7 +4,7 @@
   "description": "- 强缓存、协商缓存\r   Cache-Control:max-age=\r   节日活动，修改，编译，上线\r   index.js\r   不会请求，怎么更新？",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --mode development",
+    "build": "webpack --mode production",
     "dev": "webpack server --mode development"
   },
   "keywords": [],
@@ -24,6 +24,7 @@
     "webpack-dev-server": "^5.2.2"
   },
   "dependencies": {
+    "mini-css-extract-plugin": "^2.9.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   }

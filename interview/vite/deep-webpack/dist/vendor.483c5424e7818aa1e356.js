@@ -1,3 +1,4 @@
+"use strict";
 /*
  * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
  * This devtool is neither made for production nor for readable output files.
@@ -6,9 +7,7 @@
  * or disable the default devtool with "devtool: false".
  * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
  */
-/******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
-/******/ 	var __webpack_modules__ = ({
+(self["webpackChunkdeep_webpack"] = self["webpackChunkdeep_webpack"] || []).push([["vendor"],{
 
 /***/ "./node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/cjs/react-dom-client.development.js":
 /*!*********************************************************************************************************************!*\
@@ -68,133 +67,6 @@ eval("{/* module decorator */ module = __webpack_require__.nmd(module);\n/**\n *
 
 eval("{\n\nif (false) // removed by dead control flow\n{} else {\n  module.exports = __webpack_require__(/*! ./cjs/react.development.js */ \"./node_modules/.pnpm/react@19.1.1/node_modules/react/cjs/react.development.js\");\n}\n\n\n//# sourceURL=webpack://deep-webpack/./node_modules/.pnpm/react@19.1.1/node_modules/react/index.js?\n}");
 
-/***/ }),
-
-/***/ "./node_modules/.pnpm/scheduler@0.26.0/node_modules/scheduler/cjs/scheduler.development.js":
-/*!*************************************************************************************************!*\
-  !*** ./node_modules/.pnpm/scheduler@0.26.0/node_modules/scheduler/cjs/scheduler.development.js ***!
-  \*************************************************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-eval("{/**\n * @license React\n * scheduler.development.js\n *\n * Copyright (c) Meta Platforms, Inc. and affiliates.\n *\n * This source code is licensed under the MIT license found in the\n * LICENSE file in the root directory of this source tree.\n */\n\n\n true &&\n  (function () {\n    function performWorkUntilDeadline() {\n      needsPaint = !1;\n      if (isMessageLoopRunning) {\n        var currentTime = exports.unstable_now();\n        startTime = currentTime;\n        var hasMoreWork = !0;\n        try {\n          a: {\n            isHostCallbackScheduled = !1;\n            isHostTimeoutScheduled &&\n              ((isHostTimeoutScheduled = !1),\n              localClearTimeout(taskTimeoutID),\n              (taskTimeoutID = -1));\n            isPerformingWork = !0;\n            var previousPriorityLevel = currentPriorityLevel;\n            try {\n              b: {\n                advanceTimers(currentTime);\n                for (\n                  currentTask = peek(taskQueue);\n                  null !== currentTask &&\n                  !(\n                    currentTask.expirationTime > currentTime &&\n                    shouldYieldToHost()\n                  );\n\n                ) {\n                  var callback = currentTask.callback;\n                  if (\"function\" === typeof callback) {\n                    currentTask.callback = null;\n                    currentPriorityLevel = currentTask.priorityLevel;\n                    var continuationCallback = callback(\n                      currentTask.expirationTime <= currentTime\n                    );\n                    currentTime = exports.unstable_now();\n                    if (\"function\" === typeof continuationCallback) {\n                      currentTask.callback = continuationCallback;\n                      advanceTimers(currentTime);\n                      hasMoreWork = !0;\n                      break b;\n                    }\n                    currentTask === peek(taskQueue) && pop(taskQueue);\n                    advanceTimers(currentTime);\n                  } else pop(taskQueue);\n                  currentTask = peek(taskQueue);\n                }\n                if (null !== currentTask) hasMoreWork = !0;\n                else {\n                  var firstTimer = peek(timerQueue);\n                  null !== firstTimer &&\n                    requestHostTimeout(\n                      handleTimeout,\n                      firstTimer.startTime - currentTime\n                    );\n                  hasMoreWork = !1;\n                }\n              }\n              break a;\n            } finally {\n              (currentTask = null),\n                (currentPriorityLevel = previousPriorityLevel),\n                (isPerformingWork = !1);\n            }\n            hasMoreWork = void 0;\n          }\n        } finally {\n          hasMoreWork\n            ? schedulePerformWorkUntilDeadline()\n            : (isMessageLoopRunning = !1);\n        }\n      }\n    }\n    function push(heap, node) {\n      var index = heap.length;\n      heap.push(node);\n      a: for (; 0 < index; ) {\n        var parentIndex = (index - 1) >>> 1,\n          parent = heap[parentIndex];\n        if (0 < compare(parent, node))\n          (heap[parentIndex] = node),\n            (heap[index] = parent),\n            (index = parentIndex);\n        else break a;\n      }\n    }\n    function peek(heap) {\n      return 0 === heap.length ? null : heap[0];\n    }\n    function pop(heap) {\n      if (0 === heap.length) return null;\n      var first = heap[0],\n        last = heap.pop();\n      if (last !== first) {\n        heap[0] = last;\n        a: for (\n          var index = 0, length = heap.length, halfLength = length >>> 1;\n          index < halfLength;\n\n        ) {\n          var leftIndex = 2 * (index + 1) - 1,\n            left = heap[leftIndex],\n            rightIndex = leftIndex + 1,\n            right = heap[rightIndex];\n          if (0 > compare(left, last))\n            rightIndex < length && 0 > compare(right, left)\n              ? ((heap[index] = right),\n                (heap[rightIndex] = last),\n                (index = rightIndex))\n              : ((heap[index] = left),\n                (heap[leftIndex] = last),\n                (index = leftIndex));\n          else if (rightIndex < length && 0 > compare(right, last))\n            (heap[index] = right),\n              (heap[rightIndex] = last),\n              (index = rightIndex);\n          else break a;\n        }\n      }\n      return first;\n    }\n    function compare(a, b) {\n      var diff = a.sortIndex - b.sortIndex;\n      return 0 !== diff ? diff : a.id - b.id;\n    }\n    function advanceTimers(currentTime) {\n      for (var timer = peek(timerQueue); null !== timer; ) {\n        if (null === timer.callback) pop(timerQueue);\n        else if (timer.startTime <= currentTime)\n          pop(timerQueue),\n            (timer.sortIndex = timer.expirationTime),\n            push(taskQueue, timer);\n        else break;\n        timer = peek(timerQueue);\n      }\n    }\n    function handleTimeout(currentTime) {\n      isHostTimeoutScheduled = !1;\n      advanceTimers(currentTime);\n      if (!isHostCallbackScheduled)\n        if (null !== peek(taskQueue))\n          (isHostCallbackScheduled = !0),\n            isMessageLoopRunning ||\n              ((isMessageLoopRunning = !0), schedulePerformWorkUntilDeadline());\n        else {\n          var firstTimer = peek(timerQueue);\n          null !== firstTimer &&\n            requestHostTimeout(\n              handleTimeout,\n              firstTimer.startTime - currentTime\n            );\n        }\n    }\n    function shouldYieldToHost() {\n      return needsPaint\n        ? !0\n        : exports.unstable_now() - startTime < frameInterval\n          ? !1\n          : !0;\n    }\n    function requestHostTimeout(callback, ms) {\n      taskTimeoutID = localSetTimeout(function () {\n        callback(exports.unstable_now());\n      }, ms);\n    }\n    \"undefined\" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ &&\n      \"function\" ===\n        typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart &&\n      __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());\n    exports.unstable_now = void 0;\n    if (\n      \"object\" === typeof performance &&\n      \"function\" === typeof performance.now\n    ) {\n      var localPerformance = performance;\n      exports.unstable_now = function () {\n        return localPerformance.now();\n      };\n    } else {\n      var localDate = Date,\n        initialTime = localDate.now();\n      exports.unstable_now = function () {\n        return localDate.now() - initialTime;\n      };\n    }\n    var taskQueue = [],\n      timerQueue = [],\n      taskIdCounter = 1,\n      currentTask = null,\n      currentPriorityLevel = 3,\n      isPerformingWork = !1,\n      isHostCallbackScheduled = !1,\n      isHostTimeoutScheduled = !1,\n      needsPaint = !1,\n      localSetTimeout = \"function\" === typeof setTimeout ? setTimeout : null,\n      localClearTimeout =\n        \"function\" === typeof clearTimeout ? clearTimeout : null,\n      localSetImmediate =\n        \"undefined\" !== typeof setImmediate ? setImmediate : null,\n      isMessageLoopRunning = !1,\n      taskTimeoutID = -1,\n      frameInterval = 5,\n      startTime = -1;\n    if (\"function\" === typeof localSetImmediate)\n      var schedulePerformWorkUntilDeadline = function () {\n        localSetImmediate(performWorkUntilDeadline);\n      };\n    else if (\"undefined\" !== typeof MessageChannel) {\n      var channel = new MessageChannel(),\n        port = channel.port2;\n      channel.port1.onmessage = performWorkUntilDeadline;\n      schedulePerformWorkUntilDeadline = function () {\n        port.postMessage(null);\n      };\n    } else\n      schedulePerformWorkUntilDeadline = function () {\n        localSetTimeout(performWorkUntilDeadline, 0);\n      };\n    exports.unstable_IdlePriority = 5;\n    exports.unstable_ImmediatePriority = 1;\n    exports.unstable_LowPriority = 4;\n    exports.unstable_NormalPriority = 3;\n    exports.unstable_Profiling = null;\n    exports.unstable_UserBlockingPriority = 2;\n    exports.unstable_cancelCallback = function (task) {\n      task.callback = null;\n    };\n    exports.unstable_forceFrameRate = function (fps) {\n      0 > fps || 125 < fps\n        ? console.error(\n            \"forceFrameRate takes a positive int between 0 and 125, forcing frame rates higher than 125 fps is not supported\"\n          )\n        : (frameInterval = 0 < fps ? Math.floor(1e3 / fps) : 5);\n    };\n    exports.unstable_getCurrentPriorityLevel = function () {\n      return currentPriorityLevel;\n    };\n    exports.unstable_next = function (eventHandler) {\n      switch (currentPriorityLevel) {\n        case 1:\n        case 2:\n        case 3:\n          var priorityLevel = 3;\n          break;\n        default:\n          priorityLevel = currentPriorityLevel;\n      }\n      var previousPriorityLevel = currentPriorityLevel;\n      currentPriorityLevel = priorityLevel;\n      try {\n        return eventHandler();\n      } finally {\n        currentPriorityLevel = previousPriorityLevel;\n      }\n    };\n    exports.unstable_requestPaint = function () {\n      needsPaint = !0;\n    };\n    exports.unstable_runWithPriority = function (priorityLevel, eventHandler) {\n      switch (priorityLevel) {\n        case 1:\n        case 2:\n        case 3:\n        case 4:\n        case 5:\n          break;\n        default:\n          priorityLevel = 3;\n      }\n      var previousPriorityLevel = currentPriorityLevel;\n      currentPriorityLevel = priorityLevel;\n      try {\n        return eventHandler();\n      } finally {\n        currentPriorityLevel = previousPriorityLevel;\n      }\n    };\n    exports.unstable_scheduleCallback = function (\n      priorityLevel,\n      callback,\n      options\n    ) {\n      var currentTime = exports.unstable_now();\n      \"object\" === typeof options && null !== options\n        ? ((options = options.delay),\n          (options =\n            \"number\" === typeof options && 0 < options\n              ? currentTime + options\n              : currentTime))\n        : (options = currentTime);\n      switch (priorityLevel) {\n        case 1:\n          var timeout = -1;\n          break;\n        case 2:\n          timeout = 250;\n          break;\n        case 5:\n          timeout = 1073741823;\n          break;\n        case 4:\n          timeout = 1e4;\n          break;\n        default:\n          timeout = 5e3;\n      }\n      timeout = options + timeout;\n      priorityLevel = {\n        id: taskIdCounter++,\n        callback: callback,\n        priorityLevel: priorityLevel,\n        startTime: options,\n        expirationTime: timeout,\n        sortIndex: -1\n      };\n      options > currentTime\n        ? ((priorityLevel.sortIndex = options),\n          push(timerQueue, priorityLevel),\n          null === peek(taskQueue) &&\n            priorityLevel === peek(timerQueue) &&\n            (isHostTimeoutScheduled\n              ? (localClearTimeout(taskTimeoutID), (taskTimeoutID = -1))\n              : (isHostTimeoutScheduled = !0),\n            requestHostTimeout(handleTimeout, options - currentTime)))\n        : ((priorityLevel.sortIndex = timeout),\n          push(taskQueue, priorityLevel),\n          isHostCallbackScheduled ||\n            isPerformingWork ||\n            ((isHostCallbackScheduled = !0),\n            isMessageLoopRunning ||\n              ((isMessageLoopRunning = !0),\n              schedulePerformWorkUntilDeadline())));\n      return priorityLevel;\n    };\n    exports.unstable_shouldYield = shouldYieldToHost;\n    exports.unstable_wrapCallback = function (callback) {\n      var parentPriorityLevel = currentPriorityLevel;\n      return function () {\n        var previousPriorityLevel = currentPriorityLevel;\n        currentPriorityLevel = parentPriorityLevel;\n        try {\n          return callback.apply(this, arguments);\n        } finally {\n          currentPriorityLevel = previousPriorityLevel;\n        }\n      };\n    };\n    \"undefined\" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ &&\n      \"function\" ===\n        typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop &&\n      __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());\n  })();\n\n\n//# sourceURL=webpack://deep-webpack/./node_modules/.pnpm/scheduler@0.26.0/node_modules/scheduler/cjs/scheduler.development.js?\n}");
-
-/***/ }),
-
-/***/ "./node_modules/.pnpm/scheduler@0.26.0/node_modules/scheduler/index.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/.pnpm/scheduler@0.26.0/node_modules/scheduler/index.js ***!
-  \*****************************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-eval("{\n\nif (false) // removed by dead control flow\n{} else {\n  module.exports = __webpack_require__(/*! ./cjs/scheduler.development.js */ \"./node_modules/.pnpm/scheduler@0.26.0/node_modules/scheduler/cjs/scheduler.development.js\");\n}\n\n\n//# sourceURL=webpack://deep-webpack/./node_modules/.pnpm/scheduler@0.26.0/node_modules/scheduler/index.js?\n}");
-
-/***/ }),
-
-/***/ "./src/Hello.tsx":
-/*!***********************!*\
-  !*** ./src/Hello.tsx ***!
-  \***********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/.pnpm/react@19.1.1/node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n\nconst Hello = () => {\n  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, \"Hello World!\");\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Hello);\n\n//# sourceURL=webpack://deep-webpack/./src/Hello.tsx?\n}");
-
-/***/ }),
-
-/***/ "./src/main.tsx":
-/*!**********************!*\
-  !*** ./src/main.tsx ***!
-  \**********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-eval("{__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/.pnpm/react@19.1.1/node_modules/react/index.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ \"./node_modules/.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom/client.js\");\n/* harmony import */ var _Hello_tsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Hello.tsx */ \"./src/Hello.tsx\");\n\n\n\n(0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(document.getElementById('app')).render(/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Hello_tsx__WEBPACK_IMPORTED_MODULE_2__[\"default\"], null));\n\n//# sourceURL=webpack://deep-webpack/./src/main.tsx?\n}");
-
 /***/ })
 
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			id: moduleId,
-/******/ 			loaded: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/node module decorator */
-/******/ 	(() => {
-/******/ 		__webpack_require__.nmd = (module) => {
-/******/ 			module.paths = [];
-/******/ 			if (!module.children) module.children = [];
-/******/ 			return module;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/main.tsx");
-/******/ 	
-/******/ })()
-;
+}]);
