@@ -38,3 +38,5 @@ obj.getCount4();
 
 //res5
 obj.getCount5.call({count:666});
+
+
