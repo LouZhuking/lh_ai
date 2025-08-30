@@ -20,4 +20,4 @@ var addStrings = function (num1, num2) {
     if (carry == 1) res += "1";
 
     return res.split("").reverse().join("")
-};
+}; 
