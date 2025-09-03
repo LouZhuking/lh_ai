@@ -89,6 +89,10 @@
   - response.next() 放行
   - response.redirect() 跳转
 
+  - 通过 jwt verify 方法拿到 payload 后，添加了自定义的请求头
+    - x-user-id
+    - 后续页面就可以拿到这个值
+
 - JWT 的构成
 
   - 头部

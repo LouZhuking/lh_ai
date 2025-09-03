@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.setAuthCookies = exports.createTokens = void 0;
+exports.verifyToken = exports.setAuthCookies = exports.createTokens = void 0;
 var jose_1 = require("jose");
 var headers_1 = require("next/headers");
 var getJwtSecretKey = (function () {
@@ -91,6 +91,23 @@ exports.setAuthCookies = function (accessToken, refreshToken) { return __awaiter
                     path: '/'
                 });
                 return [2 /*return*/];
+        }
+    });
+}); };
+exports.verifyToken = function (token) { return __awaiter(void 0, void 0, void 0, function () {
+    var payload, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, jose_1.jwtVerify(token, getJwtSecretKey())];
+            case 1:
+                payload = (_a.sent()).payload;
+                return [2 /*return*/, payload];
+            case 2:
+                error_1 = _a.sent();
+                return [2 /*return*/, null];
+            case 3: return [2 /*return*/];
         }
     });
 }); };

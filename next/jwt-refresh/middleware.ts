@@ -2,6 +2,9 @@ import {
   NextRequest,
   NextResponse
 } from 'next/server'
+import {
+  verifyToken
+} from './lib/jwt'
 
 
 const protectedPath = ['/dashboard', '/profile']
@@ -14,5 +17,45 @@ export async function middleware(request: NextRequest){
   if(!protectedPath.some(p => path.startsWith(p))){
     return NextResponse.next();
   }
+  // login?
+  const accessToken = request.cookies.get('access_token')?.value;
+  const refreshToken = request.cookies.get('refresh_token')?.value;
+  console.log(accessToken,refreshToken,'//////');
+
+  if(!accessToken && !refreshToken){
+    return NextResponse.redirect(new URL('/login',request.url))
+  }
+
+  if(accessToken) {
+    const accessPayload = await verifyToken(accessToken)
+    console.log(accessPayload, '/////');
+    if(accessPayload){
+      const requestHeaders = new Headers(request.headers)
+      requestHeaders.set(
+        // 中间件当中添加或覆盖请求头
+        // 头部可以在后续的API路由或页面中读取，无需重新解析token
+        'x-user-id',
+        accessPayload.userId as string
+      )
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders
+        }
+      })
+    }
+  }
+  // accessToken过期了 无感刷新
+  if(refreshToken){
+    const refreshPayload = await verifyToken(refreshToken);
+    if(refreshPayload){
+      // 断言
+      const userId = refreshPayload.userId as string
+      const refreshUrl = new URL('/api/auth/refresh',request.url)
+      refreshUrl.searchParams.set('redirect', request.url)
+      return NextResponse.redirect(refreshUrl)
+    }
+  }
+
+
   return NextResponse.redirect(new URL('/login',request.url))
 }
