@@ -1,0 +1,1 @@
+console.log([1,[2,4]]).flat(Infinity)
