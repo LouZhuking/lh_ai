@@ -11,7 +11,6 @@ import {
   HashWorkerIn,
   type HashWorkerOut
 } from '../hash.worker'
-import { init } from 'next/dist/compiled/webpack/webpack';
 
 const CHUNK_SIZE = 5 * 1024 * 1024; // 5M一片
 const MAX_CONCURRENCY = 4 // 最大并发数
@@ -28,7 +27,7 @@ const Upload = () => {
   const totalChunks = useMemo(() => file ? Math.ceil(file.size / CHUNK_SIZE) : 0, [file])
   // 可变对象
   const workerRef = useRef<Worker | null>(null)
-  const abortRef = useRef<AbortController>(null)
+  const abortRef = useRef<AbortController | null>(null)
   // 缓存值 
   const pausedRef = useRef<boolean>(false)
   const [progress, setProgress] = useState<number>(0)
@@ -90,6 +89,17 @@ const Upload = () => {
     return res.json() as Promise<InitResp>
   }
 
+  const pause = () => {
+    pausedRef.current = true
+    abortRef.current?.abort()
+  }
+
+  const resume = async () => {
+    if (!file || !hash) return;
+    setStatus("继续上传...");
+    await startUpload();
+  }
+
   const uploadChunk = async (index: number, signal: AbortSignal) => {
     const start = index * CHUNK_SIZE;
     const end = Math.min(file!.size, start + CHUNK_SIZE)
@@ -119,7 +129,7 @@ const Upload = () => {
 
     const init = await initUpload()
     // const init = {
-    //   complete: true,
+    //   complete: false,
     //   uploaded: []
     // }
 
@@ -204,6 +214,18 @@ const Upload = () => {
                   onClick={startUpload}
                 >
                   开始上传
+                </button>
+                <button
+                  className='rounded-xl border px-4 py-2'
+                  onClick={pause}
+                >
+                  暂停
+                </button>
+                <button
+                  className='rounded-xl border px-4 py-2'
+                  onClick={resume}
+                >
+                  继续
                 </button>
               </div>
             </div>
