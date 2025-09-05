@@ -119,6 +119,19 @@ const Upload = () => {
     return res.json();
   }
 
+  const mergeAll = async () => {
+    const res = await fetch("/api/upload/merge", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        fileHash: hash
+      })
+    })
+    return res.json()
+  }
+
   const startUpload = async () => {
     if (!file) {
       return;
@@ -175,10 +188,21 @@ const Upload = () => {
     setStatus("分布上传中...")
     try {
       await Promise.all(workers)
-    } catch (err) {
-
+      if (pausedRef.current) {
+        setStatus("已暂停")
+        return;
+      }
+      setStatus("合并分片....")
+      const r = await mergeAll()
+      setStatus(r?.ok ? "上传完成" : "合并失败")
+    } catch (err: any) {
+      if (err?.name === "AbortError") {
+        setStatus("已暂停")
+      } else {
+        console.error(err);
+        setStatus(err?.message || "上传错误")
+      }
     }
-
   }
 
 
