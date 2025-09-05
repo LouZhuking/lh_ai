@@ -40,12 +40,14 @@ function App() {
       <button onClick={addTodos}>添加</button>
       <ul>
         {
-          todoList.map(todo => (
+          todoList.map((todo) => (
             <li key={todo.id}>
               <span style={{
                 textDecoration: todo.complete ? 'line-through' : 'none',
                 color: todo.complete ? '#888' : '#000'
-              }}>{todo.text}</span>
+              }}>
+                {todo.text}
+              </span>
               <button onClick={() => toggleCompleted(todo.id)}>
                 {todo.complete ? '撤销' : '完成'}
               </button>
