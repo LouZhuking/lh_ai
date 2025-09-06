@@ -1,0 +1,217 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  bio           String?
+  password      String? // 密码字段
+  refreshToken  String? // JWT refresh token
+
+  accounts Account[]
+  sessions Session[]
+
+  // 核心业务模型
+  spaces      Space[]    @relation("SpaceOwner")
+  following   Follow[]   @relation("Following")
+  followers   Follow[]   @relation("Follower")
+  likedBlocks Like[]
+  posts       Post[]     @relation("PostAuthor")
+  comments    Comment[]
+  postLikes   PostLike[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Space {
+  id          String  @id @default(cuid())
+  title       String
+  description String?
+  isPublic    Boolean @default(false)
+  content     String? // JSON字符串存储块编辑器内容
+
+  owner   User   @relation("SpaceOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId String
+
+  // 关联系统
+  tags   SpaceTag[]
+  blocks Block[]    @relation("BlockSpace")
+
+  // 层级关系
+  parent   Space?  @relation("SpaceParent", fields: [parentId], references: [id])
+  parentId String?
+  children Space[] @relation("SpaceParent")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Block {
+  id      String  @id @default(cuid())
+  type    String // 'paragraph', 'heading', 'image', 'todo', 'code', 'quote'
+  content String? // JSON字符串存储块内容
+  order   Int     @default(0) // 块在空间中的顺序
+
+  space   Space  @relation("BlockSpace", fields: [spaceId], references: [id], onDelete: Cascade)
+  spaceId String
+
+  // AI 元数据
+  aiTags    String? // AI 自动生成的标签，使用逗号分隔的字符串存储
+  aiSummary String? // AI生成的摘要
+
+  // 社交互动
+  likes    Like[]
+  isPublic Boolean @default(false) // 单个块是否可以公开
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tag {
+  id     String     @id @default(cuid())
+  name   String     @unique
+  color  String? // 标签颜色
+  spaces SpaceTag[]
+  posts  PostTag[]
+}
+
+model SpaceTag {
+  space   Space  @relation(fields: [spaceId], references: [id], onDelete: Cascade)
+  spaceId String
+  tag     Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId   String
+
+  @@id([spaceId, tagId])
+}
+
+model Like {
+  id      String @id @default(cuid())
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+  block   Block  @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  blockId String
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, blockId])
+}
+
+model Follow {
+  id          String @id @default(cuid())
+  follower    User   @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followerId  String
+  following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  followingId String
+
+  createdAt DateTime @default(now())
+
+  @@unique([followerId, followingId])
+}
+
+model Post {
+  id         String  @id @default(cuid())
+  title      String
+  content    String? @db.Text
+  excerpt    String? // 摘要
+  coverImage String? // 封面图片
+  isPublic   Boolean @default(true)
+
+  author   User   @relation("PostAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+
+  tags     PostTag[]
+  comments Comment[]
+  likes    PostLike[]
+
+  views Int @default(0) // 浏览量
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PostTag {
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId  String
+
+  @@id([postId, tagId])
+}
+
+model Comment {
+  id      String @id @default(cuid())
+  content String @db.Text
+
+  post     Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId   String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId String
+
+  // 回复功能
+  parent   Comment?  @relation("CommentReply", fields: [parentId], references: [id])
+  parentId String?
+  replies  Comment[] @relation("CommentReply")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PostLike {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+}
