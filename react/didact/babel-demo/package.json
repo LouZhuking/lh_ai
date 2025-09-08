@@ -1,0 +1,22 @@
+{
+	"devDependencies": {
+		"@babel/core": "^7.28.4",
+		"@babel/cli": "^7.28.3",
+		"babel-loader": "^10.0.0",
+		"@babel/preset-react": "^7.27.1"
+	},
+	"name": "babel-demo",
+	"version": "1.0.0",
+	"main": "index.js",
+
+  "scripts": {
+    "dev": "babel src --out-dir dist --watch",
+    "build": "babel src --out-dir dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": ""
+}
