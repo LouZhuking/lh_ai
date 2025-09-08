@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { useToast } from '@/hooks/use-toast'
-import { Upload, Pause, Play, RotateCcw, CheckCircle } from 'lucide-react'
+import { Upload, Pause, Play, RotateCcw } from 'lucide-react'
 
 const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB一片
 const MAX_CONCURRENCY = 4 // 最大并发数
@@ -98,7 +98,14 @@ const UploadPage = () => {
     })
 
     if (!res.ok) {
-      throw new Error('初始化上传失败')
+      const errorData = await res.json().catch(() => ({}))
+      const errorMessage = errorData.error || `初始化上传失败 (${res.status})`
+      console.error('初始化上传失败:', {
+        status: res.status,
+        statusText: res.statusText,
+        error: errorData
+      })
+      throw new Error(errorMessage)
     }
 
     return res.json() as Promise<InitResp>
@@ -145,7 +152,17 @@ const UploadPage = () => {
       signal
     })
 
-    if (!res.ok) throw new Error(`分片${index}上传失败`)
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}))
+      const errorMessage = errorData.error || `分片${index}上传失败 (${res.status})`
+      console.error(`分片${index}上传失败:`, {
+        status: res.status,
+        statusText: res.statusText,
+        error: errorData,
+        chunkSize: blob.size
+      })
+      throw new Error(errorMessage)
+    }
     return res.json();
   }
 
@@ -161,7 +178,16 @@ const UploadPage = () => {
       })
     })
 
-    if (!res.ok) throw new Error('合并文件失败')
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}))
+      const errorMessage = errorData.error || `合并文件失败 (${res.status})`
+      console.error('合并文件失败:', {
+        status: res.status,
+        statusText: res.statusText,
+        error: errorData
+      })
+      throw new Error(errorMessage)
+    }
     return res.json()
   }
 
@@ -179,6 +205,14 @@ const UploadPage = () => {
     setStatus("初始化上传....")
     abortRef.current = new AbortController();
     pausedRef.current = false;
+
+    console.log('开始上传文件:', {
+      fileName: file.name,
+      fileSize: file.size,
+      hash: hash?.substring(0, 16),
+      totalChunks,
+      chunkSize: CHUNK_SIZE
+    });
 
     try {
       const init = await initUpload()
@@ -270,15 +304,25 @@ const UploadPage = () => {
         })
       }
 
-    } catch (err: any) {
-      if (err?.name === "AbortError") {
+    } catch (err: unknown) {
+      const error = err as Error
+      if (error?.name === "AbortError") {
         setStatus("已暂停")
       } else {
-        console.error(err);
-        setStatus(err?.message || "上传错误")
+        console.error('上传过程出错:', {
+          error: err,
+          message: error?.message,
+          stack: error?.stack,
+          fileInfo: {
+            name: file?.name,
+            size: file?.size,
+            hash: hash?.substring(0, 16)
+          }
+        });
+        setStatus(error?.message || "上传错误")
         toast({
           title: "上传失败",
-          description: err?.message || "上传过程中出现错误",
+          description: error?.message || "上传过程中出现错误",
           variant: "destructive"
         })
       }

@@ -13,7 +13,7 @@ const updateSpaceSchema = z.object({
     type: z.string(),
     content: z.any(),
     order: z.number(),
-    aiTags: z.array(z.string()).optional(),
+    aiTags: z.union([z.array(z.string()), z.string()]).optional(),
     isPublic: z.boolean().optional()
   })).optional()
 })
@@ -133,7 +133,11 @@ export async function PATCH(
               content: JSON.stringify(block.content),
               order: block.order,
               spaceId: params.id,
-              aiTags: block.aiTags || [],
+              aiTags: Array.isArray(block.aiTags)
+                ? block.aiTags.join(',')
+                : typeof block.aiTags === 'string'
+                  ? block.aiTags
+                  : null,
               isPublic: block.isPublic || false
             }))
           })
@@ -146,8 +150,22 @@ export async function PATCH(
     return NextResponse.json(result)
   } catch (error) {
     console.error('Update space error:', error)
+
+    // 提供更详细的错误信息
+    let errorMessage = 'Internal server error'
+    let errorDetails: any = undefined
+
+    if (error instanceof Error) {
+      errorMessage = error.message
+      errorDetails = error.stack
+    }
+
     return NextResponse.json(
-      { error: 'Internal server error' },
+      {
+        error: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? errorDetails : undefined,
+        timestamp: new Date().toISOString()
+      },
       { status: 500 }
     )
   }

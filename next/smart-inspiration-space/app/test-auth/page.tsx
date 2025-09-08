@@ -10,6 +10,8 @@ export default function TestAuthPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [isClearing, setIsClearing] = useState(false)
+  const [isForceResetting, setIsForceResetting] = useState(false)
+  const [envStatus, setEnvStatus] = useState<any>(null)
 
   const clearSession = async () => {
     setIsClearing(true)
@@ -30,6 +32,38 @@ export default function TestAuthPage() {
       console.error('清除会话失败:', error)
     } finally {
       setIsClearing(false)
+    }
+  }
+
+  const forceReset = async () => {
+    setIsForceResetting(true)
+    try {
+      // 强制重置所有会话数据
+      const response = await fetch('/api/auth/force-reset', { method: 'POST' })
+      const result = await response.json()
+
+      console.log('强制重置结果:', result)
+
+      // 清除本地存储
+      localStorage.clear()
+      sessionStorage.clear()
+
+      // 强制刷新页面
+      window.location.href = '/auth/signin'
+    } catch (error) {
+      console.error('强制重置失败:', error)
+    } finally {
+      setIsForceResetting(false)
+    }
+  }
+
+  const checkEnv = async () => {
+    try {
+      const response = await fetch('/api/debug/env-check')
+      const data = await response.json()
+      setEnvStatus(data)
+    } catch (error) {
+      console.error('检查环境变量失败:', error)
     }
   }
 
@@ -77,10 +111,43 @@ export default function TestAuthPage() {
             >
               {isClearing ? '清除中...' : '清除会话数据'}
             </Button>
+
+            <Button
+              onClick={forceReset}
+              variant="destructive"
+              className="w-full"
+              disabled={isForceResetting}
+            >
+              {isForceResetting ? '强制重置中...' : '🔥 强制重置所有数据'}
+            </Button>
+
+            <Button
+              onClick={checkEnv}
+              variant="secondary"
+              className="w-full"
+            >
+              检查环境变量
+            </Button>
           </div>
 
+          {envStatus && (
+            <div className="mt-4 p-3 bg-muted rounded-lg">
+              <h4 className="font-medium mb-2">环境变量状态:</h4>
+              <div className="text-sm space-y-1">
+                <p>NEXTAUTH_SECRET: <span className={envStatus.NEXTAUTH_SECRET === 'SET' ? 'text-green-600' : 'text-red-600'}>{envStatus.NEXTAUTH_SECRET}</span></p>
+                <p>NEXTAUTH_URL: <span className="text-blue-600">{envStatus.NEXTAUTH_URL}</span></p>
+                <p>NODE_ENV: <span className="text-blue-600">{envStatus.NODE_ENV}</span></p>
+              </div>
+            </div>
+          )}
+
           <div className="text-sm text-muted-foreground">
-            <p>如果遇到JWT错误，请点击"清除会话数据"按钮</p>
+            <p><strong>JWT错误解决步骤：</strong></p>
+            <ol className="list-decimal list-inside mt-2 space-y-1">
+              <li>点击"检查环境变量"</li>
+              <li>点击"🔥 强制重置所有数据"</li>
+              <li>重新访问应用</li>
+            </ol>
           </div>
         </CardContent>
       </Card>

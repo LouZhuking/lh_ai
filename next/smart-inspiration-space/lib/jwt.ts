@@ -6,11 +6,11 @@ import {
   cookies
 } from 'next/headers';
 
-const getJwtSecretKey = (() => {
+const getJwtSecretKey = () => {
   const secret = process.env.JWT_SECRET_KEY;
   if (!secret) throw new Error('JWT_SECRET_KEY is not set');
   return new TextEncoder().encode(secret);
-})
+}
 
 export const createTokens = async (userId: string) => {
   const accessToken = await new SignJWT({ userId })

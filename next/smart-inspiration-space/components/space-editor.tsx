@@ -40,15 +40,19 @@ export function SpaceEditor({ space, canEdit = false, isOwner = false }: SpaceEd
       })
 
       if (!response.ok) {
-        throw new Error('Failed to save')
+        const errorData = await response.json().catch(() => ({}))
+        const errorMessage = errorData.error || `保存失败 (${response.status})`
+        console.error('API Error:', errorData)
+        throw new Error(errorMessage)
       }
 
       setSpaceData(prev => ({ ...prev, blocks, updatedAt: new Date() }))
     } catch (error) {
       console.error('Save error:', error)
+      const errorMessage = error instanceof Error ? error.message : '未知错误'
       toast({
         title: "保存失败",
-        description: "请稍后重试",
+        description: errorMessage,
         variant: "destructive"
       })
     } finally {
