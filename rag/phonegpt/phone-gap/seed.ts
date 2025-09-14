@@ -80,10 +80,10 @@ const loadData = async (webpages: string[]) => {
 
 // 维护一个知识库，知识库的来源可配置
 loadData([
-  "https://en.wikipedia.org/wiki/Samsung_Galaxy_S25",
-  // "https://en.wikipedia.org/wiki/Samsung_Galaxy_S24",
-  // "https://en.wikipedia.org/wiki/IPhone_16",
-  // "https://en.wikipedia.org/wiki/IPhone_16_Pro",
+  "https://www.lovepet.cn/a/gougoubaike/218693.html",
+  "https://www.lovepet.cn/a/maomibaike/bo-si-mao-xing-zou-de-mao-rong-yi-shu-pin.html",
+  "https://www.lovepet.cn/a/gougoubaike/218694.html",
+  "https://www.lovepet.cn/a/gougouzixun/quwei/2020/0716/14952.html",
   // "https://en.wikipedia.org/wiki/IPhone_15",
   // "https://en.wikipedia.org/wiki/IPhone_15_Pro",
 ]);

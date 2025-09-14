@@ -8,6 +8,7 @@ import {
 import {
   createClient
 } from '@supabase/supabase-js';
+import { log } from 'console';
 
 const supabase = createClient(
   process.env.SUPABASE_URL ?? "",
@@ -32,7 +33,7 @@ async function fetchRelevantContext(embedding: number[]) {
     error
   } = await supabase.rpc("get_relevant_chunks", {
     query_vector: embedding,
-    match_threshold: 0.7,
+    match_threshold: 0.9,
     match_count: 3
   })
 
@@ -47,7 +48,7 @@ async function fetchRelevantContext(embedding: number[]) {
   )
 }
 
-const createPrompt = (context: string, latestMessage: string) => {
+const createPrompt = (context: string, userQuestion: string) => {
   return {
     role: "system",
     content: `
@@ -65,7 +66,7 @@ const createPrompt = (context: string, latestMessage: string) => {
       If the user asks a question that is not related to a smartphone, politely inform them that you can only answer questions about smartphones.
       
       ----------------
-      QUESTION: ${latestMessage}
+      QUESTION: ${userQuestion}
       ----------------
     `
   }
@@ -83,9 +84,11 @@ export async function POST(req: Request) {
     const context = await fetchRelevantContext(embedding);
     const prompt = createPrompt(context, latestMessage);
     const result = await streamText({
-      model: openai("gpt-40-mini"),
+      model: openai("gpt-4o-mini"),
       messages: [prompt, ...messages]
     });
+    console.log(result);
+
     return result.toDataStreamResponse();
   } catch (err) {
     throw err;
