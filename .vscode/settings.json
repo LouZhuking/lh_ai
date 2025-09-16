@@ -2,5 +2,13 @@
   "compile-hero.disable-compile-files-on-did-save-code": false,
   "liveServer.settings.port": 5506,
   "editor.maxTokenizationLineLength": 20000,
-  "cSpell.words": ["langchain", "MVVM", "OLLAMA", "strs", "Trae"]
+  "cSpell.words": [
+    "langchain",
+    "MVVM",
+    "OLLAMA",
+    "reactflow",
+    "strs",
+    "supabase",
+    "Trae"
+  ]
 }
