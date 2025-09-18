@@ -75,33 +75,21 @@ react-dnd 是一个用于在 React 应用中实现拖放（Drag and Drop）功�
   封装一下
 
 我们分析了下低代码编辑器 amis，发现核心就是一个 json 的数据结构。
-
 这个 json 就是一个通过 children 属性串联的组件对象树。
-
 从物料区拖拽组件到画布区，就是在 json 的某一层级加了一个组件对象。
-
 选中组件在右侧编辑属性，就是修改 json 里某个组件对象的属性。
-
 大纲就是把这个 json 用树形展示。
-
 然后我们写了下代码，用 allomet 实现了 split pane 布局，用 tailwind 来写样式，引入 zustand 来做全局 store。
-
 在 store 中定义了 components 和对应的 add、update、delete 方法。
-
 然后对应低代码编辑器里的操作，用这些方法实现了一下。
-
 这个数据结构并不复杂，却是低代码编辑器的核心。
 
 这节我们实现了拖拽组件到画布，也就是拖拽编辑 json。
-
 首先我们加了 Button 和 Container 组件，并创建了 componentConfig 的全局 store，用来保存组件配置。
-
 然后实现了 renderComponents，它就是递归渲染 component，用到的组件配置从 componentConfig 取。
-
 之后引入 react-dnd 实现了拖拽编辑，左侧的物料添加 useDrag，画布里的组件添加 useDrop，然后当 drop 的时候，在对应 id 下添加一个对应的类型的组件。
-
 组件类型在 useDrag 的时候通过 item 传递，添加到的组件 id 在 drop 的那个组件里就有。
-
 然后还要处理下 didDrop，保证只 drop 一次。
-
 这样，我们就实现了拖拽编辑 json 的功能。
+
+基于对低代码引擎 amis 的深入分析，我设计并实现了一个可视化编辑器核心系统。项目以 JSON 结构驱动，通过 children 属性构建组件树，利用 React DnD 实现拖拽功能，结合 Zustand 管理全局状态，完成组件的增删改查与属性配置。封装了 useMaterialDrop 自定义 Hook 优化容器组件投放逻辑，使用 Supabase 持久化存储组件树数据。亮点在于精准抽象组件模型与拖拽交互设计，难点为拖拽层级控制与多次触发问题的解决，确保了编辑操作的准确与稳定。
