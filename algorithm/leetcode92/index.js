@@ -18,6 +18,7 @@ var reverseBetween = function(head, left, right) {
     alert(111);
     // pre指针初始指向虚拟头节点
     let pre = dummy;
+
     // 将pre移动到第left-1个位置，即要反转部分的前一个节点
     for (let i = 0; i < left - 1; i++) {
         pre = pre.next;
@@ -36,5 +37,7 @@ var reverseBetween = function(head, left, right) {
         pre.next = next;
     }
     // 返回虚拟头节点的下一个节点，即为整个链表的头节点
+    console.log('你好');
+    
     return dummy.next;
 };
