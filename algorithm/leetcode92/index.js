@@ -14,6 +14,8 @@
 var reverseBetween = function(head, left, right) {
     // 创建一个虚拟头节点，它的next指向链表的头节点
     let dummy = new ListNode(0, head);
+
+    alert(111);
     // pre指针初始指向虚拟头节点
     let pre = dummy;
     // 将pre移动到第left-1个位置，即要反转部分的前一个节点
